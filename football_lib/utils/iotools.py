@@ -38,6 +38,18 @@ def token_position(position_str):
   return id_position, players
   
 def read_2d(fpath):
+  """
+  Reads a .2d file
+
+  Input
+  
+  fpath: file path of .2d 
+
+  Ouput:
+
+  ids: list of times (e.g. [1, 2, ... , n])
+  objs: list of 2 dimention files (shape = (n, k, 2)) k is the number of players
+  """
   check_isfile(fpath)
   objs = []
   ids = []
