@@ -139,7 +139,7 @@ y_2 = new_y[14:]
 # In[15]:
 
 
-with writer.saving(fig, "g1.mp4", 100):
+with writer.saving(fig, "gxx.mp4", 100):
     for i in range(0,len(new_x)):
         l.set_data([x_1], [y_1])
         g.set_data([x_2], [y_2])
