@@ -4,8 +4,10 @@ from __future__ import division
 from football_lib.interface.visualize import plot_position
 from football_lib.utils.iotools import read_2d
 
-fpath = "data/data/dados_futebol/CapBotT1Suav.2d"
-save_dir = "log/CapBotT1Suav"
+# fpath = "data/data/dados_futebol/CapBotT1Suav.2d"
+fpath = "/home/vinicius/Documentos/Dados Futebol/CapBotT1Suav.2d"
+# save_dir = "log/CapBotT1Suav"
+save_dir = "/home/vinicius/Documentos/log/CapBotT1Suav"
 
 # load data of match
 ids, objs = read_2d(fpath)

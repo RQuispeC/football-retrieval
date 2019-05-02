@@ -6,6 +6,7 @@ import numpy as np
 import os.path as osp
 
 import gc
+import os
 import matplotlib as mpl
 if os.environ.get('DISPLAY','') == '':
   mpl.use('Agg')
@@ -19,9 +20,9 @@ def plot_position(id, players, limit_team, save_dir):
   Plots the positions of a match and save them in save_dir
   """
   mkdir_if_missing(save_dir)
-
-  team_a_x, team_a_y = players[:limit_team]
-  team_b_x, team_b_y = players[limit_team:]
+  print(players[0])
+  team_a_x, team_a_y = players[:limit_team][0], players[:limit_team][1]
+  team_b_x, team_b_y = players[limit_team:][0], players[limit_team:][1]
 
   # TODO fix this and customize plot to make it look like a football ground
   fig = plt.figure(figsize=(5, 10))
