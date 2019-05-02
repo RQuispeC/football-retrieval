@@ -3,6 +3,8 @@ sys.path.insert(0,sys.path[0] + '/football_lib/utils')
 
 import general_utils
 
+import numpy as np
+
 from matplotlib.patches import Arc, Rectangle, ConnectionPatch
 from matplotlib import pyplot as plt
 
@@ -45,11 +47,8 @@ def draw_teams(teamA,teamB,ids_name,path_save):
 
     ax = draw_pitch(ss) #overlay our different objects on the pitch
 
-    l, = plt.plot(teamA[0], teamA[1], 'o')
-    g, = plt.plot(teamB[0], teamB[1], 'o')
-
-    # l.set_data([teamA[0]], [teamA[1]])
-    # g.set_data([teamB[0]], [teamB[1]])
+    l, = plt.plot(teamA[0], teamA[1], 'o', color='red')
+    g, = plt.plot(teamB[0], teamB[1], 'o', color='black')
 
     plt.ylim(-2, 82)
     plt.xlim(-2, 122)
@@ -62,9 +61,17 @@ def draw_teams(teamA,teamB,ids_name,path_save):
 def teams(players,limit):
     X = players[:,0]
     Y = players[:,1]
+    
+    X_temp= X[:limit]
+    sum_ = np.sum(X_temp == -9999.0)
+
+    X = X[X != -9999.0]
+    Y = Y[Y != -9999.0]
 
     X = general_utils.rescale(X,122)
     Y = general_utils.rescale(Y,82)
+
+    limit = limit - sum_
 
     team_a_x, team_a_y = X[:limit], Y[:limit]
     team_b_x, team_b_y = X[limit:], Y[limit:]
@@ -74,12 +81,12 @@ def teams(players,limit):
 def partition(line):
     flag = False
     for i in range(len(line)):
-        if line[i] == -9999.0:
+        if line[i][0] == -9999.0:
             flag = True
-        if flag and line[i] != -9999.0:
+        if flag and line[i][0] != -9999.0:
             return i
 
 def generate_figures(ids, objs, path_save):
-    limit = partition(objs[0])
+    limit = partition(objs)
     teamA,teamB = teams(objs,limit)
     draw_teams(teamA,teamB,ids,path_save)

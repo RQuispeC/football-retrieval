@@ -20,8 +20,4 @@ limit_team = 14 #change this
 # print(os.getcwd())
 
 for id_position, players in zip(ids, objs):
-  # plot_position(id_position, players, limit_team, save_dir)
-  # print(id_position)
-  # print(players)
   generate_figures(id_position,players,save_dir)
-  break
