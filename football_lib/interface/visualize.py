@@ -20,7 +20,7 @@ def plot_position(id, players, limit_team, save_dir):
   Plots the positions of a match and save them in save_dir
   """
   mkdir_if_missing(save_dir)
-  print(players[0])
+  # print(players[0])
   team_a_x, team_a_y = players[:limit_team][0], players[:limit_team][1]
   team_b_x, team_b_y = players[limit_team:][0], players[limit_team:][1]
 
