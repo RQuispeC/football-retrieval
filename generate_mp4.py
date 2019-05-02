@@ -83,7 +83,7 @@ writer = FFMpegWriter(fps=15, metadata=metadata)
 # In[8]:
 
 
-fpath = "/home/leodecio/Área de Trabalho/Unicamp/1st_semester/recuperacao_de_informacao/pesquisa/Dados Futebol/CapBotT1Suav.2d"
+fpath = "/home/vinicius/Documentos/Dados Futebol/CapBotT1Suav.2d"
 # load data of match
 ids, objs = read_2d(fpath)
 

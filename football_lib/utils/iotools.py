@@ -29,11 +29,11 @@ def read_json(fpath):
   return obj
 
 def token_position(position_str):
-  position = position_str.split().astype(float)
+  position = np.array(position_str.split()).astype(float)
   id_position = int(position[0])
   players = []
   for i in range(1, len(position), 2):
-    players.append(position[i], position[i + 1])
+    players.append((position[i], position[i + 1]))
   players = np.array(players)
   return id_position, players
   
