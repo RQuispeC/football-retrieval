@@ -66,3 +66,46 @@ def write_json(obj, fpath):
   mkdir_if_missing(osp.dirname(fpath))
   with open(fpath, 'w') as f:
     json.dump(obj, f, indent=4, separators=(',', ': '))
+
+
+
+######
+# leo
+######
+
+def token_position_(position_str):
+    position = position_str.split()#.astype(float)
+    id_position = int(position[0])
+    players_x = []
+    players_y = []
+    for i in range(1, len(position), 2):
+        players_x.append(position[i])
+        players_y.append(position[i + 1])
+        
+    players_x = np.array(players_x).astype('float')
+    players_y = np.array(players_y).astype('float')
+    return id_position, players_x,players_y
+
+
+def read_2d_(fpath):
+    """
+    Reads a .2d file
+    Input
+    
+    fpath: file path of .2d 
+    
+    Ouput:
+    ids: list of times (e.g. [1, 2, ... , n])
+    objs: list of 2 dimention files (shape = (n, k, 2)) k is the number of players
+    """
+    #check_isfile(fpath)
+    objs = []
+    ids = []
+    with open(fpath, 'r') as f:
+        for ff in f:
+            id_position, players_x, players_y = token_position_(ff)
+            objs.append((players_x, players_y))
+            ids.append(id_position)
+    objs = np.array(objs)
+    ids = np.array(ids)
+    return ids, objs
