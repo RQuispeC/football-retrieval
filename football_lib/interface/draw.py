@@ -48,7 +48,11 @@ def draw_teams(teamA,teamB,ids_name,path_save):
     ax = draw_pitch(ss) #overlay our different objects on the pitch
 
     l, = plt.plot(teamA[0], teamA[1], 'o', color='red')
+    # l_, = plt.plot(teamA[0], teamA[1], '-', color='blue')
+
+
     g, = plt.plot(teamB[0], teamB[1], 'o', color='black')
+    # g_, = plt.plot(teamB[0], teamB[1], '-', color='green')
 
     plt.ylim(-2, 82)
     plt.xlim(-2, 122)

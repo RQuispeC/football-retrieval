@@ -21,3 +21,4 @@ limit_team = 14 #change this
 
 for id_position, players in zip(ids, objs):
   generate_figures(id_position,players,save_dir)
+  break
