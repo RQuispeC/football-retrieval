@@ -3,10 +3,17 @@ sys.path.insert(0,sys.path[0] + '/football_lib/utils')
 
 import general_utils
 
+sys.path.insert(0,sys.path[1] + '/strategies/')
+
+import toque_corto 
+
 import numpy as np
 
 from matplotlib.patches import Arc, Rectangle, ConnectionPatch
 from matplotlib import pyplot as plt
+
+
+import matplotlib.lines as mlines
 
 def draw_pitch(ax):
     # focus on only half of the pitch
@@ -53,6 +60,23 @@ def draw_teams(teamA,teamB,ids_name,path_save):
 
     g, = plt.plot(teamB[0], teamB[1], 'o', color='black')
     # g_, = plt.plot(teamB[0], teamB[1], '-', color='green')
+
+    list_teamA = toque_corto.Get_Pase_corto(teamA)
+    list_teamB = toque_corto.Get_Pase_corto(teamB)
+    
+    i = 0
+    for x , y  in zip(*teamA):
+        a = list_teamA[i]
+        l = mlines.Line2D([x,teamA[0][a]], [y, teamA[1][a]], color='red')
+        ax.add_line(l)
+        i+=1
+
+    i = 0
+    for x , y  in zip(*teamB):
+        a = list_teamB[i]
+        l = mlines.Line2D([x,teamB[0][a]], [y, teamB[1][a]], color='black')
+        ax.add_line(l)
+        i+=1
 
     plt.ylim(-2, 82)
     plt.xlim(-2, 122)
