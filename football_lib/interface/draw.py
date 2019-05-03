@@ -47,7 +47,7 @@ def draw_pitch(ax):
     return ax
 
 
-def draw_teams(teamA,teamB,ids_name,path_save):
+def draw_teams(teamA,teamB,ids_name,path_save,thres):
     fig =plt.figure() #set up the figures
     fig.set_size_inches(7, 5)
     ss = fig.add_subplot(1,1,1)
@@ -61,22 +61,28 @@ def draw_teams(teamA,teamB,ids_name,path_save):
     g, = plt.plot(teamB[0], teamB[1], 'o', color='black')
     # g_, = plt.plot(teamB[0], teamB[1], '-', color='green')
 
-    list_teamA = toque_corto.Get_Pase_corto(teamA)
-    list_teamB = toque_corto.Get_Pase_corto(teamB)
+    list_teamA = toque_corto.Pase_threshold(teamA,thres)
+    list_teamB = toque_corto.Pase_threshold(teamB,thres)
     
     i = 0
     for x , y  in zip(*teamA):
-        a = list_teamA[i]
-        l = mlines.Line2D([x,teamA[0][a]], [y, teamA[1][a]], color='red')
-        ax.add_line(l)
-        i+=1
+        if len(list_teamA[i]) != 0:
+            for w in list_teamA[i]:
+                l = mlines.Line2D([x,teamA[0][w]], [y, teamA[1][w]], color='red')
+                ax.add_line(l)
+            i+=1
+        else:
+            i+=1
 
     i = 0
     for x , y  in zip(*teamB):
-        a = list_teamB[i]
-        l = mlines.Line2D([x,teamB[0][a]], [y, teamB[1][a]], color='black')
-        ax.add_line(l)
-        i+=1
+        if len(list_teamB[i]) != 0:
+            for w in list_teamB[i]:
+                l = mlines.Line2D([x,teamB[0][w]], [y, teamB[1][w]], color='black')
+                ax.add_line(l)
+            i+=1
+        else:
+            i+=1
 
     plt.ylim(-2, 82)
     plt.xlim(-2, 122)
@@ -114,7 +120,7 @@ def partition(line):
         if flag and line[i][0] != -9999.0:
             return i
 
-def generate_figures(ids, objs, path_save):
+def generate_figures(ids, objs, path_save, thres):
     limit = partition(objs)
     teamA,teamB = teams(objs,limit)
-    draw_teams(teamA,teamB,ids,path_save)
+    draw_teams(teamA,teamB,ids,path_save,thres)

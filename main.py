@@ -18,7 +18,9 @@ limit_team = 14 #change this
 
 # import os
 # print(os.getcwd())
+thresold = 10
 
 for id_position, players in zip(ids, objs):
-  generate_figures(id_position,players,save_dir)
+  generate_figures(id_position,players,save_dir, thresold)
+  #generate_figures(id_position,players,save_dir)
   break
