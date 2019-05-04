@@ -1,26 +1,14 @@
 from __future__ import absolute_import
 from __future__ import division
 
-from football_lib.interface.visualize import plot_position
-from football_lib.interface.draw import generate_figures
-from football_lib.utils.iotools import read_2d
+from football_lib.interface.draw import plot_position
+from football_lib.match import Match
 
-# fpath = "data/data/dados_futebol/CapBotT1Suav.2d"
-fpath = "data/data/dados_futebol/CapBotT1Suav.2d"
-# save_dir = "log/CapBotT1Suav"
-save_dir = "/home/jeanfranco/Disciplinas/Topicos en recuperacion de informacion/Proyect/log/"
+fpath = "data/dados_futebol/CapBotT1Suav.2d"
+save_dir = "log/"
 
-# load data of match
-ids, objs = read_2d(fpath)
+match = Match(fpath, edge_strategy_name='knn', k = 1)
+plot_position(match[288], save_dir)
 
-# TODO: separate teams based on 9999.000 position on first frame
-limit_team = 14 #change this
-
-# import os
-# print(os.getcwd())
-thresold = 10
-
-for id_position, players in zip(ids, objs):
-  generate_figures(id_position,players,save_dir, thresold)
-  #generate_figures(id_position,players,save_dir)
-  break
+match.update_edge_strategy(new_edge_strategy='threshold', thr = 40)
+plot_position(match[289], save_dir)

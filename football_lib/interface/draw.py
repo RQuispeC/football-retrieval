@@ -1,19 +1,22 @@
-import sys
-sys.path.insert(0,sys.path[0] + '/football_lib/utils')
+from __future__ import absolute_import
+from __future__ import division
 
-import general_utils
-
-sys.path.insert(0,sys.path[1] + '/strategies/')
-
-import toque_corto 
-
+import os
+import os.path as osp
 import numpy as np
 
+import matplotlib as mpl
+if os.environ.get('DISPLAY','') == '':
+  mpl.use('Agg')
 from matplotlib.patches import Arc, Rectangle, ConnectionPatch
 from matplotlib import pyplot as plt
-
-
 import matplotlib.lines as mlines
+
+import gc
+
+from football_lib.utils.iotools import mkdir_if_missing
+from football_lib.utils.general_utils import rescale
+
 
 def draw_pitch(ax):
     # focus on only half of the pitch
@@ -27,7 +30,6 @@ def draw_pitch(ax):
     #Left, Right 6-yard Box
     LeftSixYard = Rectangle([0,32], width = 4.9, height = 16, fill = False)
     RightSixYard = Rectangle([115.1,32], width = 4.9, height = 16, fill = False)
-
 
     #Prepare Circles
     centreCircle = plt.Circle((60,40),8.1,color="black", fill = False)
@@ -43,84 +45,51 @@ def draw_pitch(ax):
     #return element
     for i in element:
         ax.add_patch(i)
-        
     return ax
 
+def plot_position(position, save_dir):
+    team_a_color = 'red'
+    team_b_color = 'blue'
 
-def draw_teams(teamA,teamB,ids_name,path_save,thres):
+    mkdir_if_missing(save_dir)
     fig =plt.figure() #set up the figures
     fig.set_size_inches(7, 5)
     ss = fig.add_subplot(1,1,1)
 
+    #plot background
     ax = draw_pitch(ss) #overlay our different objects on the pitch
 
-    l, = plt.plot(teamA[0], teamA[1], 'o', color='red')
-    # l_, = plt.plot(teamA[0], teamA[1], '-', color='blue')
+    #plot players
+    x_pos = rescale(position.team_a.X(), 122)
+    y_pos = rescale(position.team_a.Y(), 82)
+    l, = plt.plot(x_pos, y_pos, 'o', color=team_a_color)
+    x_pos = rescale(position.team_b.X(), 122)
+    y_pos = rescale(position.team_b.Y(), 82)
+    g, = plt.plot(x_pos, y_pos, 'o', color=team_b_color)
 
+    #plot edges
+    for edge in position.edges_team_a:
+        player_m = position.team_a[edge[0]]
+        player_n = position.team_a[edge[1]]
+        x_pos = rescale(np.array([player_m.x, player_n.x]), 122)
+        y_pos = rescale(np.array([player_m.y, player_n.y]), 82)
+        l = mlines.Line2D(x_pos, y_pos, color=team_a_color)
+        ax.add_line(l)
 
-    g, = plt.plot(teamB[0], teamB[1], 'o', color='black')
-    # g_, = plt.plot(teamB[0], teamB[1], '-', color='green')
-
-    list_teamA = toque_corto.Pase_threshold(teamA,thres)
-    list_teamB = toque_corto.Pase_threshold(teamB,thres)
-    
-    i = 0
-    for x , y  in zip(*teamA):
-        if len(list_teamA[i]) != 0:
-            for w in list_teamA[i]:
-                l = mlines.Line2D([x,teamA[0][w]], [y, teamA[1][w]], color='red')
-                ax.add_line(l)
-            i+=1
-        else:
-            i+=1
-
-    i = 0
-    for x , y  in zip(*teamB):
-        if len(list_teamB[i]) != 0:
-            for w in list_teamB[i]:
-                l = mlines.Line2D([x,teamB[0][w]], [y, teamB[1][w]], color='black')
-                ax.add_line(l)
-            i+=1
-        else:
-            i+=1
+    for edge in position.edges_team_b:
+        player_m = position.team_b[edge[0]]
+        player_n = position.team_b[edge[1]]
+        x_pos = rescale(np.array([player_m.x, player_n.x]), 122)
+        y_pos = rescale(np.array([player_m.y, player_n.y]), 82)
+        l = mlines.Line2D(x_pos, y_pos, color=team_b_color)
+        ax.add_line(l)
 
     plt.ylim(-2, 82)
     plt.xlim(-2, 122)
-    
     plt.axis('off')
+    plt.savefig(osp.join(save_dir, "{}.png".format(str(position.id).zfill(10))))
 
-    plt.savefig(path_save+str(ids_name)+'.png')
-
-
-def teams(players,limit):
-    X = players[:,0]
-    Y = players[:,1]
-    
-    X_temp= X[:limit]
-    sum_ = np.sum(X_temp == -9999.0)
-
-    X = X[X != -9999.0]
-    Y = Y[Y != -9999.0]
-
-    X = general_utils.rescale(X,122)
-    Y = general_utils.rescale(Y,82)
-
-    limit = limit - sum_
-
-    team_a_x, team_a_y = X[:limit], Y[:limit]
-    team_b_x, team_b_y = X[limit:], Y[limit:]
-
-    return (team_a_x,team_a_y),(team_b_x,team_b_y)
-
-def partition(line):
-    flag = False
-    for i in range(len(line)):
-        if line[i][0] == -9999.0:
-            flag = True
-        if flag and line[i][0] != -9999.0:
-            return i
-
-def generate_figures(ids, objs, path_save, thres):
-    limit = partition(objs)
-    teamA,teamB = teams(objs,limit)
-    draw_teams(teamA,teamB,ids,path_save,thres)
+    # Clean RAM
+    fig.clf()
+    plt.close()
+    gc.collect()
