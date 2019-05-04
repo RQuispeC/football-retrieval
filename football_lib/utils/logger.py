@@ -4,7 +4,7 @@ import sys
 import os
 import os.path as osp
 
-from .iotools import mkdir_if_missing
+from football_lib.utils.iotools import mkdir_if_missing
 
 
 class Logger(object):
