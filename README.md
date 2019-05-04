@@ -17,7 +17,6 @@ basic previous steps
 * `main.py` will control all our code
 * Directory `football_lib` has the library we are going to implement
 
-
 ## Understanding the classes
 
 * `Player` class has attributes: `x`, `y` and `id`.
