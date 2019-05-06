@@ -25,6 +25,6 @@ class KNN(object):
     tsize = team.size()
     for i in range(tsize):
       for j in indices[i]:
-        edges.append([team[players_id[i]].id, team[players_id[j]].id, dmat[i, j]])
+        edges.append([players_id[i], players_id[j], dmat[i, j]])
     edges = np.array(edges)
     return edges
