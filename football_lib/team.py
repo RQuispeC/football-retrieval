@@ -10,7 +10,7 @@ class Team(object):
     for p in self.players:
       if p.id  == player_id:
         return p
-    raise IndexError("Player {} does not exits in team {}".format(player_id, self.id()))
+    raise IndexError("Player {} does not exits in team {}".format(player_id, self.ID()))
 
   def size(self):
     return len(self.players)
