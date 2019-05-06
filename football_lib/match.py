@@ -9,6 +9,7 @@ import numpy as np
 
 class Match(object):
   def __init__(self, fpath, edge_strategy_name = 'knn', *args, **kwargs):
+    self.id = fpath.split('/')[-1].split('.')[0]
     self.positions = []
     team_size_limit = self._team_partition(fpath)
     print("team size: {}\nReading match data ...".format(team_size_limit))
