@@ -8,7 +8,7 @@ import numpy as np
 __all__ =  ['KNN']
 
 class KNN(object):
-  def __init__(self, k = 1, **kwargs):
+  def __init__(self, k = 1, *args, **kwargs):
     self.k = k
 
   def __call__(self, position):

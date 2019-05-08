@@ -8,7 +8,7 @@ import numpy as np
 __all__ =  ['Threshold']
 
 class Threshold(object):
-  def __init__(self, thr = 40, **kwargs):
+  def __init__(self, thr = 40, *args, **kwargs):
     self.thr = thr
 
   def __call__(self, match):
