@@ -8,22 +8,28 @@ from .utils.iotools import check_isfile
 import numpy as np
 
 class Match(object):
-  def __init__(self, fpath, edge_strategy_name = 'knn', *args, **kwargs):
+  def __init__(self, fpath, edge_strategy_name = 'knn', graph_representation_name = 'space', *args, **kwargs):
     self.id = fpath.split('/')[-1].split('.')[0]
     self.positions = []
     team_size_limit = self._team_partition(fpath)
     print("team size: {}\nReading match data ...".format(team_size_limit))
     self.edge_strategy_name = edge_strategy_name
+    self.graph_representation_name = graph_representation_name
     self._build_match(fpath, team_size_limit, *args, **kwargs)
     print("number of positions:", self.size())
 
   def size(self):
     return len(self.positions)
-  
-  def update_edge_strategy(self, new_edge_strategy, *args, **kwargs):
-    self.edge_strategy_name = new_edge_strategy
+
+  def update_edge_strategy(self, edge_strategy_name, *args, **kwargs):
+    self.edge_strategy_name = edge_strategy_name
     for p in self.positions:
-      p.update_edge_strategy(new_edge_strategy, *args, **kwargs)
+      p.update_edge_strategy(edge_strategy_name, *args, **kwargs)
+
+  def update_graph_representation(self, graph_representation_name, *args, **kwargs):
+    self.graph_representation_name = graph_representation_name
+    for p in self.positions:
+      p.update_graph_representation(graph_representation_name, *args, **kwargs)
 
   def __getitem__(self, ind):
     if ind < 0 or ind > self.size():
@@ -55,7 +61,7 @@ class Match(object):
     with open(fpath, 'r') as f:
       for ff in f:
         id_position, team_a, team_b = self._token_position(ff, team_size_limit)
-        p = Position(id_position, team_a, team_b, self.edge_strategy_name, *args, **kwargs)
+        p = Position(id_position, team_a, team_b, self.edge_strategy_name, self.graph_representation_name, *args, **kwargs)
         self.positions.append(p)
 
   def _team_partition(self, fpath):
