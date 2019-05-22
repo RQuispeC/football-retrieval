@@ -12,7 +12,6 @@ class Space(object):
     pass
 
   def __call__(self, position):
-    print('arestas: ',position.edges_team_a[:,1])
     rep = np.array([position.team_a.X(), position.team_a.Y(), position.team_b.X(), position.team_b.Y()])
     rep = rep.reshape(-1)
     return rep

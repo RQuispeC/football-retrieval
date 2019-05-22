@@ -7,7 +7,8 @@ from football_lib.match import Match
 fpath = "/home/vinicius/Documentos/Dados Futebol/CapBotT1Suav.2d"
 save_dir = "/home/vinicius/Documentos/log"
 
-match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'degree', k = 2)
+# match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'space', k = 1)
+match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'degree', k = 1)
 plot_position(match[288], save_dir)
 print("Presentation position 288:", match[288].signature)
 
