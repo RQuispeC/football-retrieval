@@ -1,9 +1,11 @@
 from __future__ import absolute_import
 
 from .space import *
+from .degree import *
 
 __representation_factory = {
   'space': Space,
+  'degree': Degree
 }
 
 def get_names():
