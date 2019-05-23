@@ -14,7 +14,7 @@ class Degree(object):
 	def __call__(self, position):
 		deg_team_a = np.zeros(position.edges_team_a.shape[0])
 		deg_team_b = np.zeros(position.edges_team_b.shape[0])
-
+		
 		temp = int(position.edges_team_b[0,0])
 
 		edges_team_a_u = np.array(position.edges_team_a[:,0]).astype(int)

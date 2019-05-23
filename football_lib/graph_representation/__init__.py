@@ -2,10 +2,12 @@ from __future__ import absolute_import
 
 from .space import *
 from .degree import *
+from .eccentricity import *
 
 __representation_factory = {
   'space': Space,
-  'degree': Degree
+  'degree': Degree,
+  'eccentricity': Eccentricity
 }
 
 def get_names():
