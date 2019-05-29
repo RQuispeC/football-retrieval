@@ -7,6 +7,7 @@ class Team(object):
     self.players = players
 
   def __getitem__(self, player_id):
+    player_id = int(player_id)
     for p in self.players:
       if p.id  == player_id:
         return p

@@ -67,6 +67,9 @@ def plot_position(position, save_dir):
     y_pos = rescale(position.team_b.Y(), 82)
     g, = plt.plot(x_pos, y_pos, 'o', color=team_b_color)
 
+    print('aqui A: ',position.edges_team_a)
+    print('aqui B: ',position.edges_team_b)
+
     #plot edges
     for edge in position.edges_team_a:
         player_m = position.team_a[edge[0]]

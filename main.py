@@ -9,6 +9,7 @@ save_dir = "/home/vinicius/Documentos/log"
 
 # match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'space', k = 1)
 # match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'degree', k = 1)
+# match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'degree', thr = 40)
 match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'eccentricity', thr = 40)
 plot_position(match[288], save_dir)
 # print("Presentation position 288:", match[288].signature)

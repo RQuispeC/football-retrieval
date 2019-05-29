@@ -13,8 +13,11 @@ class Eccentricity(object):
 		pass
 
 	def __call__(self, position):
-		matrix_team_a = convert_to_matrix(position.edges_team_a, 11)
-		matrix_team_b = convert_to_matrix(position.edges_team_b, 11)
+		edges_t_a = position.edges_team_a.copy()
+		edges_t_b = position.edges_team_b.copy()
+
+		matrix_team_a = convert_to_matrix(edges_t_a, 11)
+		matrix_team_b = convert_to_matrix(edges_t_b, 11)
 
 		dist_team_a = self._floyd_warshall(matrix_team_a)
 		dist_team_b = self._floyd_warshall(matrix_team_b)
