@@ -1,15 +1,18 @@
 from __future__ import absolute_import
 from __future__ import division
 
+import os
+import sys
+sys.path.append(os.getcwd())
+
 from football_lib.utils.edgestools import dist_mat
 from football_lib.utils.edgestools import convert_to_matrix
 
 from football_lib.utils import graphPath_algorithms
 
 import numpy as np
-import sys
 
-__all__ =  ['Global_Efficiency']
+__all__ =  ['Gefficiency']
 np.seterr(divide='ignore')
 
 class Gefficiency(object):
@@ -18,8 +21,10 @@ class Gefficiency(object):
         #pass
 
     def __call__(self, position):
-        matrix_team_a = convert_to_matrix(position.edges_team_a, self.V)
-        matrix_team_b = convert_to_matrix(position.edges_team_b, self.V)
+        edges_ta = position.edges_team_a.copy()#[]
+        edges_tb = position.edges_team_b.copy() #[]
+        matrix_team_a = convert_to_matrix(edges_ta, self.V)
+        matrix_team_b = convert_to_matrix(edges_tb, self.V)
 
         dist_team_a = graphPath_algorithms.floyd_warshall(matrix_team_a)
         dist_team_b = graphPath_algorithms.floyd_warshall(matrix_team_b)
