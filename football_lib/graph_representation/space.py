@@ -8,7 +8,7 @@ import numpy as np
 __all__ =  ['Space']
 
 class Space(object):
-  def __init__(self, *args, **kwargs):
+  def __init__(self, match, *args, **kwargs):
     pass
 
   def __call__(self, position):

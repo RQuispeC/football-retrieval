@@ -5,8 +5,18 @@ from .team import Team
 from .position import Position
 from .utils.iotools import check_isfile
 
+from football_lib import edge_strategies
+from football_lib import graph_representation
+
 import numpy as np
 
+import os.path as osp
+
+"""
+TODO: 
+create function to parse position to file format
+create graph_representation that uses the creates THE WHOLE EMBEDDING (calls to graph2vect) in __init__ and then uses the in __call__ just recovers the embeddings, this will require to change _build_match workflow
+"""
 class Match(object):
   def __init__(self, fpath, edge_strategy_name = 'knn', graph_representation_name = 'space', *args, **kwargs):
     self.id = fpath.split('/')[-1].split('.')[0]
@@ -15,7 +25,11 @@ class Match(object):
     print("team size: {}\nReading match data ...".format(team_size_limit))
     self.edge_strategy_name = edge_strategy_name
     self.graph_representation_name = graph_representation_name
+    self.edge_builder = edge_strategies.init_strategy(name = edge_strategy_name, *args, **kwargs)
+    self.rep_builder = None
     self._build_match(fpath, team_size_limit, *args, **kwargs)
+    print("edges created, computing features")
+    self.update_graph_representation(graph_representation_name, *args, **kwargs)
     print("number of positions:", self.size())
 
   def size(self):
@@ -23,13 +37,15 @@ class Match(object):
 
   def update_edge_strategy(self, edge_strategy_name, *args, **kwargs):
     self.edge_strategy_name = edge_strategy_name
+    self.edge_builder = edge_strategies.init_strategy(name = edge_strategy_name, *args, **kwargs)
     for p in self.positions:
-      p.update_edge_strategy(edge_strategy_name, *args, **kwargs)
+      p.update_edge_strategy(self.edge_builder)
 
   def update_graph_representation(self, graph_representation_name, *args, **kwargs):
     self.graph_representation_name = graph_representation_name
+    self.rep_builder = graph_representation.init_representation(name = graph_representation_name, match = self, *args, **kwargs)
     for p in self.positions:
-      p.update_graph_representation(graph_representation_name, *args, **kwargs)
+      p.update_graph_representation(self.rep_builder)
 
   def __getitem__(self, ind):
     if ind < 0 or ind > self.size():
@@ -61,7 +77,7 @@ class Match(object):
     with open(fpath, 'r') as f:
       for ff in f:
         id_position, team_a, team_b = self._token_position(ff, team_size_limit)
-        p = Position(id_position, team_a, team_b, self.edge_strategy_name, self.graph_representation_name, *args, **kwargs)
+        p = Position(id_position, team_a, team_b, self.edge_builder, None, *args, **kwargs)
         self.positions.append(p)
 
   def _team_partition(self, fpath):
@@ -76,3 +92,8 @@ class Match(object):
           if flag and line[i] != -9999.0:
             return limit_ind
           limit_ind += 1
+
+  def _convert_to_embedding_format(self, save_dir):
+    for p in self.positions:
+      fpath  = osp.join(save_dir, "{}.json".format(p.id))
+      p._convert_to_embedding_format(fpath)

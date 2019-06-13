@@ -16,7 +16,7 @@ __all__ =  ['Gefficiency']
 np.seterr(divide='ignore')
 
 class Gefficiency(object):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, match, *args, **kwargs):
         self.V = 11
         #pass
 
