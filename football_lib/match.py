@@ -18,7 +18,7 @@ create function to parse position to file format
 create graph_representation that uses the creates THE WHOLE EMBEDDING (calls to graph2vect) in __init__ and then uses the in __call__ just recovers the embeddings, this will require to change _build_match workflow
 """
 class Match(object):
-  def __init__(self, fpath, edge_strategy_name = 'knn', graph_representation_name = 'space', *args, **kwargs):
+  def __init__(self, fpath, edge_strategy_name = 'knn', graph_representation_name = 'space', sampling = 1, *args, **kwargs):
     self.id = fpath.split('/')[-1].split('.')[0]
     self.positions = []
     team_size_limit = self._team_partition(fpath)
@@ -27,7 +27,7 @@ class Match(object):
     self.graph_representation_name = graph_representation_name
     self.edge_builder = edge_strategies.init_strategy(name = edge_strategy_name, *args, **kwargs)
     self.rep_builder = None
-    self._build_match(fpath, team_size_limit, *args, **kwargs)
+    self._build_match(fpath, team_size_limit, sampling, *args, **kwargs)
     print("edges created, computing features")
     self.update_graph_representation(graph_representation_name, *args, **kwargs)
     print("number of positions:", self.size())
@@ -48,8 +48,8 @@ class Match(object):
       p.update_graph_representation(self.rep_builder)
 
   def __getitem__(self, ind):
-    if ind < 0 or ind > self.size():
-      raise IndexError("{} out of range (0, {})".format(ind, self.size - 1))
+    if not ind in self.positions:
+      raise IndexError("{} not a valid position")
     return self.positions[ind]
 
   def _token_position(self, position_str, team_size_limit):
@@ -68,17 +68,20 @@ class Match(object):
     team_b = Team(players = players_team_b)
     return id_position, team_a, team_b
 
-  def _build_match(self, fpath, team_size_limit, *args, **kwargs):
+  def _build_match(self, fpath, team_size_limit, sampling, *args, **kwargs):
     """
     Reads a .2d file and fills self.positions
     """
     check_isfile(fpath)
     self.positions = []
+    id_position = 0
     with open(fpath, 'r') as f:
-      for ff in f:
-        id_position, team_a, team_b = self._token_position(ff, team_size_limit)
+      for ind, ff in enumerate(f):
+        if ind % sampling != 0: continue
+        _, team_a, team_b = self._token_position(ff, team_size_limit)
         p = Position(id_position, team_a, team_b, self.edge_builder, None, *args, **kwargs)
         self.positions.append(p)
+        id_position += 1
 
   def _team_partition(self, fpath):
     with open(fpath, 'r') as f:
@@ -97,3 +100,12 @@ class Match(object):
     for p in self.positions:
       fpath  = osp.join(save_dir, "{}.json".format(p.id))
       p._convert_to_embedding_format(fpath)
+  
+  def get_signature(self):
+    if self.graph_representation_name != "embedding":
+      raise ValueError("this function is available on for signatures embeddings")
+    signature = []
+    for p in self.positions:
+      signature.append(p.signature)
+    signature = np.array(signature)
+    return signature
