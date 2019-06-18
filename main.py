@@ -3,7 +3,7 @@ from __future__ import division
 
 import numpy as np
 
-from football_lib.interface.draw import plot_position, plot_comparison
+from football_lib.interface.draw import plot_position, plot_comparison, generate_video
 from football_lib.match import Match
 
 from football_lib.graph_similarity.player_distance import player_proximity
@@ -16,16 +16,17 @@ save_dir = "/home/vinicius/Documentos/log/"
 
 # match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'space', k = 1)
 # match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'degree', k = 1)
-match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'degree', thr = 40, sampling = 20, overwrite = False)
+match = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'degree', thr = 40, sampling = 30, overwrite = False)
 # match1 = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = False)
 # match2 = Match(fpath2, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = False)
 # match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40)
 # match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40)
 
-k_allowed = 5
+k_allowed = 10
 
 distance, path, player = player_proximity(match, 6, k_allowed, 'euclidean')
-print(path)
+
+generate_video(match, match, path, save_dir, match.team_size_limit, match.team_size_limit, 6, 0, player, 0)
 
 # distance, path = fastdtw_position_proximity(match2, match1)
 # path = np.array(path)

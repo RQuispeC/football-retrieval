@@ -22,6 +22,7 @@ class Match(object):
     self.id = fpath.split('/')[-1].split('.')[0]
     self.positions = []
     team_size_limit = self._team_partition(fpath)
+    self.team_size_limit = team_size_limit
     print("team size: {}\nReading match data ...".format(team_size_limit))
     self.edge_strategy_name = edge_strategy_name
     self.graph_representation_name = graph_representation_name

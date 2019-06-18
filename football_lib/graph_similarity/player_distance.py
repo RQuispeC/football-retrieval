@@ -64,9 +64,6 @@ def path_processing(path, k_allowed):
 			path1 = np.delete(path1, np.arange(left,right))
 			path2 = np.delete(path2, np.arange(left,right))
 
-	print('path1: ', path1)
-	print('path2: ', path2)
-
 	output = np.stack((path1,path2), axis=-1)
 
 	return output
