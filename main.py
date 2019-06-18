@@ -17,17 +17,17 @@ save_dir = "log/"
 
 # match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'space', k = 1)
 # match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'degree', k = 1)
-match = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'degree', thr = 40, sampling = 30, overwrite = False)
-# match1 = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = False)
-# match2 = Match(fpath2, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = False)
+#match = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'degree', thr = 40, sampling = 30, overwrite = False)
+match1 = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = False, mode = 'team')
+match2 = Match(fpath2, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = False, mode = 'team')
 # match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40)
 # match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40)
 
 k_allowed = 10
 
-distance, path, player = player_proximity(match, 6, k_allowed, 'euclidean')
+#distance, path, player = player_proximity(match, 6, k_allowed, 'euclidean')
 
-generate_video(match, match, path, save_dir, match.team_size_limit, match.team_size_limit, 6, 0, player, 0)
+#generate_video(match, match, path, save_dir, match.team_size_limit, match.team_size_limit, 6, 0, player, 0)
 
 # distance, path = fastdtw_position_proximity(match2, match1)
 # path = np.array(path)
@@ -50,9 +50,10 @@ generate_video(match, match, path, save_dir, match.team_size_limit, match.team_s
 #   plot_comparison(match1[50], match2[i], save_dir)
 
 # Team proximity
-# s = match1.get_signature()
-# s_a = s[:, 1, :]
+s = match1.get_signature()
+s_a = s[:, 1, :]
 
-# global_distance, path_res, best_team = fastdtw_team_proximity(s_a, [match2])
-# print(global_distance)
-# print(best_team)
+global_distance, path_res, best_team = fastdtw_team_proximity(s_a, [match2], k_allowed)
+print(global_distance)
+print(best_team)
+generate_video(match1, match2, path_res, save_dir, match1.team_size_limit, match2.team_size_limit)

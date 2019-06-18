@@ -7,6 +7,7 @@ from fastdtw import fastdtw
 from scipy.spatial import distance
 
 from football_lib.utils.general_utils import distance_matrix
+from football_lib.utils.dtwtools import path_processing
 
 SIGMA = 15
 INF = 1e15
@@ -17,7 +18,7 @@ distance_dic = {
   'manhattan': distance.cityblock
 }
 
-def fastdtw_team_proximity(team_features, search_matches, distance_function = 'euclidean'):
+def fastdtw_team_proximity(team_features, search_matches, k_allowed, distance_function = 'euclidean'):
   global_distance = np.inf
   path_res = []
   best_team = -1
@@ -35,6 +36,9 @@ def fastdtw_team_proximity(team_features, search_matches, distance_function = 'e
       global_distance = distance
       best_team = (i, 1)
       path_res = path
+
+  path_res = np.array(path_res)
+  path_res = path_processing(path_res, k_allowed)
   return global_distance, path_res, best_team
 
 
