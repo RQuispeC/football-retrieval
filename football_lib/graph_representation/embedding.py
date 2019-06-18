@@ -14,10 +14,12 @@ __all__ =  ['Embedding']
 
 class Embedding(object):
   def __init__(self, match, overwrite = False, *args, **kwargs):
+    if match.mode not in ['position', 'team']: raise ValueError("mode {} is not valid".format(match.mode))
+    self.mode = match.mode
     dataset_path = "football_lib/graph_representation/graph2vec/dataset"
     feature_path = "football_lib/graph_representation/graph2vec/features"
-    input_path = osp.join(dataset_path, match.id)
-    output_path = osp.join(feature_path, "{}.csv".format(match.id))
+    input_path = osp.join(dataset_path, "{}_{}".format(match.id, self.mode))
+    output_path = osp.join(feature_path, "{}_{}.csv".format(match.id, self.mode))
     if not osp.exists(input_path) or not osp.exists(output_path) or overwrite:
       mkdir_if_missing(dataset_path)
       mkdir_if_missing(feature_path)
@@ -32,4 +34,9 @@ class Embedding(object):
     self.features = {int(row[0]): row[1:] for row in np.array(csv)}
 
   def __call__(self, position):
-    return self.features[position.id]
+    if self.mode == 'position':
+      return self.features[position.id]
+    elif self.mode == 'team':
+      return self.features[position.id * 2], self.features[position.id * 2 + 1]
+    else:
+      raise ValueError("{} is not a valid mode".format(self.mode))

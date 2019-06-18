@@ -22,11 +22,14 @@ class Position(object):
     else:
       self.signature = None
   
-  def _convert_to_embedding_format(self, fpath):
-    f = open(fpath, "w")
+  def _convert_to_embedding_format(self, fpath1, fpath2 = "/tmp", mode = 'position'):
+    f = open(fpath1, "w")
     edges = ""
     features = ""
-    graph = np.vstack((self.edges_team_a, self.edges_team_b))
+    if mode == "position":
+      graph = np.vstack((self.edges_team_a, self.edges_team_b))
+    elif mode == "team":
+      graph = self.edges_team_a
     for i, e in enumerate(graph):
       if i > 0:
         edges += ','
@@ -35,3 +38,17 @@ class Position(object):
       features += "\"{}\" : \"{}\"".format(i, int(e[2]*10000)) #consider float point values up to 1e4
     f.write("{\"edges\": [" + edges + "], \"features\": {" + features + "}}")
     f.close()
+    if mode == 'team':
+      f = open(fpath2, "w")
+      edges = ""
+      features = ""
+      graph = self.edges_team_b
+      min_edge_id = np.min(self.edges_team_b[:, :2])
+      for i, e in enumerate(graph):
+        if i > 0:
+          edges += ','
+          features += ','
+        edges += '[{}, {}]'.format(int(e[0] - min_edge_id), int(e[1] - min_edge_id))
+        features += "\"{}\" : \"{}\"".format(i, int(e[2]*10000)) #consider float point values up to 1e4
+      f.write("{\"edges\": [" + edges + "], \"features\": {" + features + "}}")
+      f.close()

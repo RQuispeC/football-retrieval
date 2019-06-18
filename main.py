@@ -7,12 +7,13 @@ from football_lib.interface.draw import plot_position, plot_comparison, generate
 from football_lib.match import Match
 
 from football_lib.graph_similarity.player_distance import player_proximity
+from football_lib.graph_similarity.team_distance import fastdtw_team_proximity
 from football_lib.graph_similarity.position_distance import normal_position_proximity, gaussian_position_proximity, fastdtw_position_proximity
 
 fpath = "/home/vinicius/Documentos/Dados Futebol/teste.2d"
-fpath1 = "/home/vinicius/Documentos/Dados Futebol/CapBotT1Suav.2d"
-fpath2 = "/home/vinicius/Documentos/Dados Futebol/CapBotT2Suav.2d"
-save_dir = "/home/vinicius/Documentos/log/"
+fpath1 = "data/dados_futebol/CapBotT1Suav.2d"
+fpath2 = "data/dados_futebol/CapBotT2Suav.2d"
+save_dir = "log/"
 
 # match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'space', k = 1)
 # match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'degree', k = 1)
@@ -39,6 +40,7 @@ generate_video(match, match, path, save_dir, match.team_size_limit, match.team_s
 #plt.plot(path[:30, 0], path[:30, 1])
 #plt.savefig("tmp.png")
 
+# Position proximity
 # top, dis =  normal_position_proximity(match1, match2, 100, 5)
 # print(match1.size())
 # print(match2.size())
@@ -47,12 +49,10 @@ generate_video(match, match, path, save_dir, match.team_size_limit, match.team_s
 #   print(i, "-->", d)
 #   plot_comparison(match1[50], match2[i], save_dir)
 
-# plot_position(match[288], save_dir)
-# print("Presentation position 288:", match[288].signature)
+# Team proximity
+# s = match1.get_signature()
+# s_a = s[:, 1, :]
 
-# match.update_edge_strategy(edge_strategy_name='threshold', thr = 40)
-# plot_position(match[289], save_dir)
-
-# match.update_graph_representation(graph_representation_name = 'space', thr = 40)
-# plot_position(match[290], save_dir)
-# print("Presentation position 288:", match[289].signature)
+# global_distance, path_res, best_team = fastdtw_team_proximity(s_a, [match2])
+# print(global_distance)
+# print(best_team)
