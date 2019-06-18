@@ -9,7 +9,7 @@ import numpy as np
 __all__ =  ['Eccentricity']
 
 class Eccentricity(object):
-	def __init__(self, *args, **kwargs):
+	def __init__(self, match, *args, **kwargs):
 		pass
 
 	def __call__(self, position):

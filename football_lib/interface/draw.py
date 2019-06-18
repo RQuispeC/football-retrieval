@@ -5,12 +5,16 @@ import os
 import os.path as osp
 import numpy as np
 
+import subprocess
+import glob
 import matplotlib as mpl
 if os.environ.get('DISPLAY','') == '':
   mpl.use('Agg')
 from matplotlib.patches import Arc, Rectangle, ConnectionPatch
 from matplotlib import pyplot as plt
 import matplotlib.lines as mlines
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 import gc
 
@@ -67,9 +71,6 @@ def plot_position(position, save_dir):
     y_pos = rescale(position.team_b.Y(), 72)
     g, = plt.plot(x_pos, y_pos, 'o', color=team_b_color)
 
-    print('aqui A: ',position.edges_team_a)
-    print('aqui B: ',position.edges_team_b)
-
     #plot edges
     for edge in position.edges_team_a:
         player_m = position.team_a[edge[0]]
@@ -96,3 +97,141 @@ def plot_position(position, save_dir):
     fig.clf()
     plt.close()
     gc.collect()
+
+
+def plot_comparison(i, position_a, position_b, save_dir, team1_size_limit, team2_size_limit, player_query = -1, query_team = -1, player_res = -1, res_team = -1, save_plot = True):
+    team_a_color = 'red'
+    team_b_color = 'green'
+    player_color = 'blue'
+
+    mkdir_if_missing(save_dir)
+    fig =plt.figure() #set up the figures
+    fig.set_size_inches(14, 5)
+    ss1 = fig.add_subplot(1,2,1)
+
+    #plot background
+    ax1 = draw_pitch(ss1) #overlay our different objects on the pitch
+
+    #plot players
+    x_pos = rescale(position_a.team_a.X(), 100)
+    y_pos = rescale(position_a.team_a.Y(), 72)
+    l, = plt.plot(x_pos, y_pos, 'o', color=team_a_color)
+
+    if query_team == 0:
+        x_query = x_pos[player_query]
+        y_query = y_pos[player_query]
+        l, = plt.plot(x_query, y_query, 'o', color=player_color)
+
+    x_pos = rescale(position_a.team_b.X(), 100)
+    y_pos = rescale(position_a.team_b.Y(), 72)
+    g, = plt.plot(x_pos, y_pos, 'o', color=team_b_color)
+
+    if query_team == 1:
+        x_query = x_pos[player_query]
+        y_query = y_pos[player_query]
+        g, = plt.plot(x_query, y_query, 'o', color=player_color)
+
+    #plot edges
+    for edge in position_a.edges_team_a:
+        player_m = position_a.team_a[edge[0]]
+        player_n = position_a.team_a[edge[1]]
+        x_pos = rescale(np.array([player_m.x, player_n.x]), 100)
+        y_pos = rescale(np.array([player_m.y, player_n.y]), 72)
+        l = mlines.Line2D(x_pos, y_pos, color=team_a_color)
+        if query_team == 0 and (player_m.id == player_query or player_n.id == player_query):
+            l = mlines.Line2D(x_pos, y_pos, color=player_color)
+        ax1.add_line(l)
+
+    for edge in position_a.edges_team_b:
+        player_m = position_a.team_b[edge[0]]
+        player_n = position_a.team_b[edge[1]]
+        x_pos = rescale(np.array([player_m.x, player_n.x]), 100)
+        y_pos = rescale(np.array([player_m.y, player_n.y]), 72)
+        l = mlines.Line2D(x_pos, y_pos, color=team_b_color)
+        if query_team == 1 and (player_m.id == player_query + team1_size_limit or player_n.id == player_query + team1_size_limit):
+            l = mlines.Line2D(x_pos, y_pos, color=player_color)
+        ax1.add_line(l)
+
+    plt.ylim(-2, 72)
+    plt.xlim(-2, 102)
+    plt.axis('off')
+
+    ss2 = fig.add_subplot(1,2,2)
+    ax2 = draw_pitch(ss2) #overlay our different objects on the pitch
+    
+    #plot players
+    x_pos = rescale(position_b.team_a.X(), 100)
+    y_pos = rescale(position_b.team_a.Y(), 72)
+    l, = plt.plot(x_pos, y_pos, 'o', color=team_a_color)
+
+    if res_team == 0:
+        x_res = x_pos[player_res]
+        y_res = y_pos[player_res]
+        l, = plt.plot(x_res, y_res, 'o', color=player_color)
+
+    x_pos = rescale(position_b.team_b.X(), 100)
+    y_pos = rescale(position_b.team_b.Y(), 72)
+    g, = plt.plot(x_pos, y_pos, 'o', color=team_b_color)
+
+    if res_team == 1:
+        x_res = x_pos[player_res]
+        y_res = y_pos[player_res]
+        g, = plt.plot(x_res, y_res, 'o', color=player_color)
+
+
+    #plot edges
+    for edge in position_b.edges_team_a:
+        player_m = position_b.team_a[edge[0]]
+        player_n = position_b.team_a[edge[1]]
+        x_pos = rescale(np.array([player_m.x, player_n.x]), 100)
+        y_pos = rescale(np.array([player_m.y, player_n.y]), 72)
+        l = mlines.Line2D(x_pos, y_pos, color=team_a_color)
+        if res_team == 0 and (player_m.id == player_res or player_n.id == player_res):
+            l = mlines.Line2D(x_pos, y_pos, color=player_color)
+        ax2.add_line(l)
+
+    for edge in position_b.edges_team_b:
+        player_m = position_b.team_b[edge[0]]
+        player_n = position_b.team_b[edge[1]]
+        x_pos = rescale(np.array([player_m.x, player_n.x]), 100)
+        y_pos = rescale(np.array([player_m.y, player_n.y]), 72)
+        l = mlines.Line2D(x_pos, y_pos, color=team_b_color)
+        if res_team == 1 and (player_m.id == player_res + team2_size_limit or player_n.id == player_res + team2_size_limit):
+            l = mlines.Line2D(x_pos, y_pos, color=player_color)
+        ax2.add_line(l)
+
+    plt.ylim(-2, 72)
+    plt.xlim(-2, 102)
+    plt.axis('off')
+
+    if save_plot:
+        plt.savefig(save_dir + "file%08d.png" % i)
+        # plt.savefig(osp.join(save_dir, "{}_{}.png".format(str(position_a.id).zfill(10), str(position_b.id).zfill(10))))
+    #convert to image
+    #canvas = FigureCanvas(fig)
+    #canvas.draw()
+    #s, (width, height) = canvas.print_to_buffer()
+    #image = np.fromstring(s, np.uint8).reshape((height, width, 4))
+
+    # Clean RAM
+    fig.clf()
+    plt.close()
+    gc.collect()
+
+    #return image
+
+def generate_video(match1, match2, path, save_dir, team1_size_limit, team2_size_limit, player_query = -1, query_team = -1, player_res = -1, res_team = -1):
+    for i in range(path.shape[0]):
+        p1 = path[i,0]
+        p2 = path[i,1]
+
+        plot_comparison(i, match1[p1], match2[p2], save_dir, team1_size_limit, team2_size_limit, player_query, query_team, player_res, res_team)
+
+    os.chdir(save_dir)
+    subprocess.call([
+        'ffmpeg', '-framerate', '8', '-i', 'file%08d.png', '-r', '30', '-pix_fmt', 'yuv420p',
+        'video_name.mp4'
+    ])
+
+    for file_name in glob.glob("*.png"):
+        os.remove(file_name)

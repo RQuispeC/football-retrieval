@@ -2,6 +2,8 @@
 data
 log
 .vscode
+dataset
+features
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

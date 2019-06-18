@@ -8,12 +8,12 @@ import numpy as np
 __all__ =  ['Degree']
 
 class Degree(object):
-	def __init__(self, *args, **kwargs):
+	def __init__(self, match, *args, **kwargs):
 		pass
 
 	def __call__(self, position):
-		deg_team_a = np.zeros(position.edges_team_a.shape[0])
-		deg_team_b = np.zeros(position.edges_team_b.shape[0])
+		deg_team_a = np.zeros(11)
+		deg_team_b = np.zeros(11)
 		
 		temp = int(position.edges_team_b[0,0])
 
