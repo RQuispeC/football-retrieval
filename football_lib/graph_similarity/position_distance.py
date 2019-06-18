@@ -49,7 +49,7 @@ def gaussian_position_proximity(match_a, match_b, id_position_match_a, top_k = 5
   return indices, dis[indices]
 
 def fastdtw_position_proximity(match_a, match_b, distance_function = 'euclidean'):
-  a = match_a.get_signature() 
+  a = match_a.get_signature()
   b = match_b.get_signature()
   global_distance, path_res = fastdtw(a, b, dist=distance_dic[distance_function])
   return global_distance, path_res

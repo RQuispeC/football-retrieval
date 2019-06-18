@@ -12,15 +12,11 @@ import numpy as np
 
 import os.path as osp
 
-"""
-TODO: 
-create function to parse position to file format
-create graph_representation that uses the creates THE WHOLE EMBEDDING (calls to graph2vect) in __init__ and then uses the in __call__ just recovers the embeddings, this will require to change _build_match workflow
-"""
 class Match(object):
-  def __init__(self, fpath, edge_strategy_name = 'knn', graph_representation_name = 'space', sampling = 1, *args, **kwargs):
+  def __init__(self, fpath, edge_strategy_name = 'knn', graph_representation_name = 'space', sampling = 1, mode = 'position', *args, **kwargs):
     self.id = fpath.split('/')[-1].split('.')[0]
     self.positions = []
+    self.mode = mode
     team_size_limit = self._team_partition(fpath)
     print("team size: {}\nReading match data ...".format(team_size_limit))
     self.edge_strategy_name = edge_strategy_name
@@ -98,14 +94,25 @@ class Match(object):
 
   def _convert_to_embedding_format(self, save_dir):
     for p in self.positions:
-      fpath  = osp.join(save_dir, "{}.json".format(p.id))
-      p._convert_to_embedding_format(fpath)
-  
+      if self.mode == 'position':
+        fpath = osp.join(save_dir, "{}.json".format(p.id))
+        p._convert_to_embedding_format(fpath, mode = self.mode)
+      elif self.mode == 'team':
+        fpath1 = osp.join(save_dir, "{}.json".format(p.id * 2))
+        fpath2 = osp.join(save_dir, "{}.json".format(p.id * 2 + 1))
+        p._convert_to_embedding_format(fpath1, fpath2, mode = self.mode)
+      else:
+        raise ValueError("{} is not a valid mode".format(self.mode))
+
   def get_signature(self):
     if self.graph_representation_name != "embedding":
       raise ValueError("this function is available on for signatures embeddings")
     signature = []
     for p in self.positions:
-      signature.append(p.signature)
+      if self.mode == 'position':
+        signature.append(p.signature)
+      elif self.mode == 'team':
+        team_a_signature, team_b_signature = p.signature
+        signature.append([team_a_signature, team_b_signature])
     signature = np.array(signature)
     return signature
