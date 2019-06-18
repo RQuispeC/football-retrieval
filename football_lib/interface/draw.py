@@ -11,6 +11,8 @@ if os.environ.get('DISPLAY','') == '':
 from matplotlib.patches import Arc, Rectangle, ConnectionPatch
 from matplotlib import pyplot as plt
 import matplotlib.lines as mlines
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 import gc
 
@@ -93,3 +95,92 @@ def plot_position(position, save_dir):
     fig.clf()
     plt.close()
     gc.collect()
+
+
+def plot_comparison(position_a, position_b, save_dir, save_plot = True):
+    team_a_color = 'red'
+    team_b_color = 'blue'
+
+    mkdir_if_missing(save_dir)
+    fig =plt.figure() #set up the figures
+    fig.set_size_inches(14, 5)
+    ss1 = fig.add_subplot(1,2,1)
+
+    #plot background
+    ax1 = draw_pitch(ss1) #overlay our different objects on the pitch
+
+    #plot players
+    x_pos = rescale(position_a.team_a.X(), 100)
+    y_pos = rescale(position_a.team_a.Y(), 72)
+    l, = plt.plot(x_pos, y_pos, 'o', color=team_a_color)
+    x_pos = rescale(position_a.team_b.X(), 100)
+    y_pos = rescale(position_a.team_b.Y(), 72)
+    g, = plt.plot(x_pos, y_pos, 'o', color=team_b_color)
+
+    #plot edges
+    for edge in position_a.edges_team_a:
+        player_m = position_a.team_a[edge[0]]
+        player_n = position_a.team_a[edge[1]]
+        x_pos = rescale(np.array([player_m.x, player_n.x]), 100)
+        y_pos = rescale(np.array([player_m.y, player_n.y]), 72)
+        l = mlines.Line2D(x_pos, y_pos, color=team_a_color)
+        ax1.add_line(l)
+
+    for edge in position_a.edges_team_b:
+        player_m = position_a.team_b[edge[0]]
+        player_n = position_a.team_b[edge[1]]
+        x_pos = rescale(np.array([player_m.x, player_n.x]), 100)
+        y_pos = rescale(np.array([player_m.y, player_n.y]), 72)
+        l = mlines.Line2D(x_pos, y_pos, color=team_b_color)
+        ax1.add_line(l)
+
+    plt.ylim(-2, 72)
+    plt.xlim(-2, 102)
+    plt.axis('off')
+
+    ss2 = fig.add_subplot(1,2,2)
+    ax2 = draw_pitch(ss2) #overlay our different objects on the pitch
+    
+    #plot players
+    x_pos = rescale(position_b.team_a.X(), 100)
+    y_pos = rescale(position_b.team_a.Y(), 72)
+    l, = plt.plot(x_pos, y_pos, 'o', color=team_a_color)
+    x_pos = rescale(position_b.team_b.X(), 100)
+    y_pos = rescale(position_b.team_b.Y(), 72)
+    g, = plt.plot(x_pos, y_pos, 'o', color=team_b_color)
+
+    #plot edges
+    for edge in position_b.edges_team_a:
+        player_m = position_b.team_a[edge[0]]
+        player_n = position_b.team_a[edge[1]]
+        x_pos = rescale(np.array([player_m.x, player_n.x]), 100)
+        y_pos = rescale(np.array([player_m.y, player_n.y]), 72)
+        l = mlines.Line2D(x_pos, y_pos, color=team_a_color)
+        ax2.add_line(l)
+
+    for edge in position_b.edges_team_b:
+        player_m = position_b.team_b[edge[0]]
+        player_n = position_b.team_b[edge[1]]
+        x_pos = rescale(np.array([player_m.x, player_n.x]), 100)
+        y_pos = rescale(np.array([player_m.y, player_n.y]), 72)
+        l = mlines.Line2D(x_pos, y_pos, color=team_b_color)
+        ax2.add_line(l)
+
+    plt.ylim(-2, 72)
+    plt.xlim(-2, 102)
+    plt.axis('off')
+
+    if save_plot:
+        plt.savefig(osp.join(save_dir, "{}_{}.png".format(str(position_a.id).zfill(10), str(position_b.id).zfill(10))))
+    #convert to image
+    #canvas = FigureCanvas(fig)
+    #canvas.draw()
+    #s, (width, height) = canvas.print_to_buffer()
+    #image = np.fromstring(s, np.uint8).reshape((height, width, 4))
+
+    # Clean RAM
+    fig.clf()
+    plt.close()
+    gc.collect()
+
+    #return image

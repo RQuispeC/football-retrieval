@@ -24,7 +24,7 @@ def normal_position_proximity(match_a, match_b, id_position_match_a, top_k = 5):
   dis = dis[id_position_match_a, :]
   indices = np.argsort(dis)
   indices = indices[:min(top_k, len(indices))]
-  return indices
+  return indices, dis[indices]
 
 def gaussian_position_proximity(match_a, match_b, id_position_match_a, top_k = 5, window_size = 25):
   if window_size % 2 == 0: window_size += 1
@@ -46,7 +46,7 @@ def gaussian_position_proximity(match_a, match_b, id_position_match_a, top_k = 5
   dis = np.sum(dis, axis=1)
   indices = np.argsort(dis)
   indices = indices[:min(top_k, len(indices))]
-  return indices
+  return indices, dis[indices]
 
 def fastdtw_position_proximity(match_a, match_b, distance_function = 'euclidean'):
   a = match_a.get_signature() 

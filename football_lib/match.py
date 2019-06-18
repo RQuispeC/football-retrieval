@@ -48,8 +48,8 @@ class Match(object):
       p.update_graph_representation(self.rep_builder)
 
   def __getitem__(self, ind):
-    if not ind in self.positions:
-      raise IndexError("{} not a valid position")
+    if ind < 0 or ind >= self.size():
+      raise IndexError("{} not a valid position".format(ind))
     return self.positions[ind]
 
   def _token_position(self, position_str, team_size_limit):
@@ -87,13 +87,13 @@ class Match(object):
     with open(fpath, 'r') as f:
       for ff in f:
         line = np.array(ff.split()).astype(float)
-        flag = False
         limit_ind = 0
+        cnt = 0
         for i in range(1, len(line), 2):
-          if line[i] == -9999.0:
-            flag = True
-          if flag and line[i] != -9999.0:
+          if cnt == 11 and line[i] != -9999.0:
             return limit_ind
+          if line[i] != -9999.0:
+            cnt += 1
           limit_ind += 1
 
   def _convert_to_embedding_format(self, save_dir):
