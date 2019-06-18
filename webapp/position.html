@@ -57,59 +57,49 @@
             <h1 class="d-block mb-4" data-aos="fade-up">Web Design Conference 2019</h1>
             <span class="d-block mb-5 caption" data-aos="fade-up">September 6th-7th, Minnesota, United States</span>-->
 
-            <label for="pwd">Strategies:</label>
-            <select id="strategies" class="form-control">
-              <option value="knn">Knn</option>
-              <option value="tr">Threshold</option>
-            </select> 
+            <label> Jogo 1: 0 a <a id="qtd1"></a> </label> # 
+            <label> Jogo 2: 0 a <a id="qtd2"></a></br> </label> </br> 
 
-            <label for="pwd">Value:</label>
-            <input type="text" class="form-control" id="kvalue" value=3>
-
-        	</br>
-        	</br>
-
-            <label for="pwd">Approach:</label>
-            <select id="approach" class="form-control" >
-              <option value="player">Player</option>
-              <option value="team">Team</option>
-              <option value="position">Position</option>
-            </select>
-          </br>
-          </br>
-          </br>
-
-          <label for="pwd">Match 1:</label>
-            <select id="matches_1" class="form-control" >
+            <label for="pwd">Frames:</label>
+            <select id="frames" class="form-control" >
               <!--<option value="dg">Degree</option>
               <option value="ec">Eccentricity</option>
               <option value="ge">Global Efficiency</option>
               <option value="sp">Space</option>-->
             </select>
-        	
-        	<label for="pwd">Match 2:</label>
-            <select id="matches_2" class="form-control" >
-              <!--<option value="dg">Degree</option>
-              <option value="ec">Eccentricity</option>
-              <option value="ge">Global Efficiency</option>
-              <option value="sp">Space</option>-->
-            </select>
-            <label for="pwd">Value:</label>
-            <label>1-60</label>
-            <input type="text" class="form-control" id="sample" value=30>
-            </br>
             
-            <!--<a href="#" class="btn-custom"><span>Proceed</span></a>-->
-             <button id="getHtml" class="btn-custom">Proceed</button>
-
+            <label for="pwd">Team:</label>
+            <select id="team" class="form-control">
+              <option value="0">1</option>
+              <option value="1">2</option>
+            </select>
+            <p>
+            <div id="container">
+              <button id="visualize" class="btn-custom">Visualize</button>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <button id="go" class="btn-custom">Go</button> 
+            </div>
+          </p>
+          
+          <div align="left">
+            <figure>
+                <img id="img" src="images/pitch.png" width="700" height="450">
+            </figure>
+          </div>
+          
+          </br>
+           
           </div>
         </div>
       </div>
     </div>
-
-    
-
-
       
     <footer class="site-footer">
       <div class="container">
@@ -119,30 +109,38 @@
     
   </div>
   <script type="text/javascript">
+    //document.getElementById("img").src = "/home/leodecio/Imagens/GOPR5710.JPG";
 
-
-  	    function load_matches() {
-        var combo1 = document.getElementById("matches_1");
-        var combo2 = document.getElementById("matches_2");
-        var i = 0;
+    function max(v1,v2){
+      if(v1>=v2){
+        return v1;
+      }
+      else{
+        return v2;
+      }
+    }
+    function load_n(){
+      var combo = document.getElementById("frames");
+      
+      var mat1 = sessionStorage.getItem("mat1");
+      var mat2 = sessionStorage.getItem("mat2");
+      var sample = sessionStorage.getItem("sample");
+        
         $.ajax({
-          url:"http://localhost:5000/games",
+          url:"http://localhost:5000/tamanho_g/"+mat1+"/"+mat2,
           type: 'POST',
           dataType: 'application/javascript',
           success:function(result){
-              var json = JSON.parse(result)
-              for (var key in json) {
+              var json = JSON.parse(result);
+              var q1 = json['qtd1']/sample;
+              var q2 = json['qtd2']/sample;
+              document.getElementById("qtd1").innerHTML = q1;
+              document.getElementById("qtd2").innerHTML = q2;
+              for (var i = 0; i < max(q1,q2); i++) {
                 var opt = document.createElement("option");
-                var opt2 = document.createElement("option");
-                //opt.value = key;
-                opt.value = key;
-                opt.text = json[key];
-                
-                opt2.value = key;
-                opt2.text = json[key];
-
-                combo1.add(opt, combo1.options[i]);
-                combo2.add(opt2, combo2.options[i]);
+                opt.value = i;
+                opt.text = i;
+                combo.add(opt, combo.options[i]);
               }
             },
           error: function(e) {
@@ -151,51 +149,54 @@
       });
     } 
 
-    $("#getHtml").click(load_matches());
+    $("#getHtml").click(load_n());
 
     function session() {
 
+      var m = document.getElementById("matches");
+      var mat = m.options[m.selectedIndex].value;
 
+      var t = document.getElementById("team");
+      var tea = t.options[t.selectedIndex].value;
 
-
-      var s = document.getElementById("strategies");
-      var str = s.options[s.selectedIndex].value;
-      sessionStorage.setItem("str", str);
-
-      var v = document.getElementById("kvalue");
-      var val = v.value;
-      sessionStorage.setItem("val", val);
-
-      var a = document.getElementById("approach");
-      var apr = a.options[a.selectedIndex].value;
-      sessionStorage.setItem("apr", apr);
-
-      var m1 = document.getElementById("matches_1");
-      var mat1 = m1.options[m1.selectedIndex].value;
-      var m2 = document.getElementById("matches_2");
-      var mat2 = m2.options[m2.selectedIndex].value;
-      sessionStorage.setItem("mat1", mat1);
-      sessionStorage.setItem("mat2", mat2);
-
-      var v = document.getElementById("sample");
-      var val = v.value;
-      sessionStorage.setItem("sample", val);
-
-      if(apr == 'player'){
-      	window.location.href = "jogador.html";
-
-      }
-      else if(apr == 'team'){
-      	window.location.href = "team.html";
-      }
-      else{
-      	window.location.href = "position.html";
-      }
+      var p = document.getElementById("player");
+      var pla = p.options[p.selectedIndex].value;
       
-	} 
+      sessionStorage.setItem("mat", mat);
+      sessionStorage.setItem("tea", tea);
+      sessionStorage.setItem("pla", pla);
 
-    $("#getHtml").click(function() {
-        session();
+      window.location.href = "video.html";
+
+    } 
+  
+    $("#go").click(function(){
+      session();  
+    });
+
+
+    function show() {
+        $.ajax({
+          url:"http://localhost:5000/games",
+          type: 'POST',
+          dataType: 'application/javascript',
+          success:function(result){
+              var json = JSON.parse(result)
+              for (var key in json) {
+                var opt = document.createElement("option");
+                opt.value = key;
+                opt.text = json[key];
+                combo.add(opt, combo.options[i]);
+              }
+            },
+          error: function(e) {
+          console.log("ERROR: "+ e);
+        }
+      });
+    } 
+
+    $("#visualize").click(function(){
+      show();  
     });
   
   </script>

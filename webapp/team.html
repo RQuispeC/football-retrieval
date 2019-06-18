@@ -56,41 +56,30 @@
             <!--<span class="d-block mb-3 caption" data-aos="fade-up">Conference 2019</span>
             <h1 class="d-block mb-4" data-aos="fade-up">Web Design Conference 2019</h1>
             <span class="d-block mb-5 caption" data-aos="fade-up">September 6th-7th, Minnesota, United States</span>-->
-
-            <label for="pwd">Match:</label>
-            <select id="matches" class="form-control" >
-              <!--<option value="dg">Degree</option>
-              <option value="ec">Eccentricity</option>
-              <option value="ge">Global Efficiency</option>
-              <option value="sp">Space</option>-->
-            </select>
-          </br>
           
             <label for="pwd">Team:</label>
             <select id="team" class="form-control">
-              <option value="1">1</option>
-              <option value="2">2</option>
-            </select> 
-          </br>
-            
-            <label for="pwd">Player:</label>
-            <select id="player" class="form-control">
               <option value="0">1</option>
               <option value="1">2</option>
               <option value="2">3</option>
               <option value="3">4</option>
-              <option value="4">5</option>
-              <option value="5">6</option>
-              <option value="6">7</option>
-              <option value="7">8</option>
-              <option value="8">9</option>
-              <option value="9">10</option>
-              <option value="10">11</option>
+            </select> 
+          </br>
+            
+          <label for="pwd">Ratio:</label>
+            <input type="text" class="form-control" id="ratio" value=10>
+          </br>
+
+          <label for="pwd">Distances:</label>
+            <select id="distances" class="form-control">
+              <option value="euclidean">Euclidean</option>
+              <option value="cosine">Cosine</option>
+              <option value="manhattan">Manhattan</option>
             </select> 
           </br>
           
           </br>
-            <button id="go" class="btn-custom">getttt</button>
+            <button id="go" class="btn-custom">Go</button>
           </div>
         </div>
       </div>
@@ -135,20 +124,19 @@
 
     function session() {
 
-      var m = document.getElementById("matches");
-      var mat = m.options[m.selectedIndex].value;
-
       var t = document.getElementById("team");
       var tea = t.options[t.selectedIndex].value;
+      sessionStorage.setItem("team", tea);
 
-      var p = document.getElementById("player");
-      var pla = p.options[p.selectedIndex].value;
-      
-      sessionStorage.setItem("mat", mat);
-      sessionStorage.setItem("tea", tea);
-      sessionStorage.setItem("pla", pla);
+      var ra = document.getElementById("ratio");
+      var ratio = ra.value;
+      sessionStorage.setItem("ratio", ratio);
 
-      window.location.href = "contact.html";
+      var d = document.getElementById("distances");
+      var dis = d.options[d.selectedIndex].value;
+      sessionStorage.setItem("distance", dis);
+
+      window.location.href = "video.html";
 
     } 
   
