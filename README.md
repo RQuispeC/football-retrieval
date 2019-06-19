@@ -1,8 +1,33 @@
 # Football retrieval project
 
+## Dependecies
+
+This proyect was developed and tested under a linux distribution, dependecies are:
+
+* Python 3
+* matplotlib
+* jsonschema
+* tqdm
+* numpy
+* pandas
+* texttable
+* gensim
+* networkx
+* joblib
+* logging
+* flask
+* flask_cors
+
+## Basics
+
 basic previous steps
 
 * Clone this repo
+
+```
+git clone https://github.com/RQuispeC/football-retrieval.git
+```
+
 * Download the file shared by the professor
 * Create a directory `data` and unzip data in a directory `dados_futebol`. Final `data` should look like:
   ```
@@ -14,26 +39,18 @@ basic previous steps
       possecorfluT2.txt
   ```
 
-* `main.py` will control all our code
-
-* Directory `football_lib` has the library we are going to implement
-
-## Understanding the classes
-
-* `Player` class has attributes: `x`, `y` and `id`.
-* `Team` class stores a set of valid `Players`, a valid player as positions `x` and `y` inside the field.
-* `Position` class implements `team_a`, `team_b`, `edges_team_a`, `edges_team_b` and `id`. The edges are build based on used-defined strategy.
-* `Match` class implements the set of all the `Position` objects.
-
-### Example in `main.py`
+* `main.py` has examples for comparing players, teams and positions using terminal interface
 
 ```
-fpath = "data/dados_futebol/CapBotT1Suav.2d" #data of a match
-save_dir = "log/" #directory for saving outputs
+python3 main.py
+```
 
-match = Match(fpath, edge_strategy_name='knn', k = 1) #read a match and create graph based on 'knn' strategy
-plot_position(match[288], save_dir) #plot the position 288 of the match
+results will be save in the directory `log/`
 
-match.update_edge_strategy(new_edge_strategy='threshold', thr = 40) #update graph edge strategy to threhold 
-plot_position(match[289], save_dir) #plot the position 299 of the match
+## Web interface
+
+In order to start the web interface run
+
+```
+python3 server.py
 ```

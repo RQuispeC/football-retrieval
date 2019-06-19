@@ -10,15 +10,15 @@ from football_lib.graph_similarity.player_distance import player_proximity
 from football_lib.graph_similarity.team_distance import fastdtw_team_proximity
 from football_lib.graph_similarity.position_distance import normal_position_proximity, gaussian_position_proximity, fastdtw_position_proximity
 
-fpath = "/home/vinicius/Documentos/Dados Futebol/teste.2d"
-fpath1 = "/home/vinicius/Documentos/Dados Futebol/CapBotT1Suav.2d"
-fpath2 = "/home/vinicius/Documentos/Dados Futebol/CapBotT2Suav.2d"
-fpath3 = "/home/vinicius/Documentos/Dados Futebol/CapPalT1Suav.2d"
-fpath4 = "/home/vinicius/Documentos/Dados Futebol/CapSpoT1Suav.2d"
-fpath5 = "/home/vinicius/Documentos/Dados Futebol/SpoFlaT1Suav.2d"
-save_dir = "/home/vinicius/Documentos/log/"
+# fpath = "/home/vinicius/Documentos/Dados Futebol/teste.2d"
+# fpath1 = "/home/vinicius/Documentos/Dados Futebol/CapBotT1Suav.2d"
+# fpath2 = "/home/vinicius/Documentos/Dados Futebol/CapBotT2Suav.2d"
+# fpath3 = "/home/vinicius/Documentos/Dados Futebol/CapPalT1Suav.2d"
+# fpath4 = "/home/vinicius/Documentos/Dados Futebol/CapSpoT1Suav.2d"
+# fpath5 = "/home/vinicius/Documentos/Dados Futebol/SpoFlaT1Suav.2d"
+# save_dir = "/home/vinicius/Documentos/log/"
 
-samp = 20
+# samp = 20
 
 # match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'space', k = 1)
 # match = Match(fpath, edge_strategy_name='knn', graph_representation_name = 'degree', k = 1)
@@ -28,10 +28,10 @@ samp = 20
 # match1 = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = False)
 # match2 = Match(fpath2, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = False)
 # match1 = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'eccentricity', thr = 40, sampling = 40, overwrite = False)
-match = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40, sampling = 40, overwrite = False)
-match1 = Match(fpath3, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40, sampling = 40, overwrite = False)
-match2 = Match(fpath4, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40, sampling = 40, overwrite = False)
-match3 = Match(fpath5, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40, sampling = 40, overwrite = False)
+# match = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40, sampling = 40, overwrite = False)
+# match1 = Match(fpath3, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40, sampling = 40, overwrite = False)
+# match2 = Match(fpath4, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40, sampling = 40, overwrite = False)
+# match3 = Match(fpath5, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40, sampling = 40, overwrite = False)
 # match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40)
 # match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40)
 
@@ -40,27 +40,27 @@ match3 = Match(fpath5, edge_strategy_name='threshold', graph_representation_name
 
 # print(len(match[0].team_a.players))
 
-k_allowed = 5
-player_query = 6
-team_query = 0
+# k_allowed = 5
+# player_query = 6
+# team_query = 0
 
-matches = [match1,match2,match3]
+# matches = [match1,match2,match3]
 
-distance, path, player, match_ = player_proximity(match, matches, player_query, k_allowed, 'euclidean')
+# distance, path, player, match_ = player_proximity(match, matches, player_query, k_allowed, 'euclidean')
 
-print(distance, player, match_)
+# print(distance, player, match_)
 
 
-match_res = 0
-if player >= matches[match_].team_size_limit:
-	match_res = 1
+# match_res = 0
+# if player >= matches[match_].team_size_limit:
+# 	match_res = 1
 
-if(match_ == 0):
-	generate_video(match, match1, path, samp, save_dir, match.team_size_limit, match1.team_size_limit, player_query, team_query, player, match_res)
-elif(match_ == 1):
-	generate_video(match, match2, path, samp, save_dir, match.team_size_limit, match2.team_size_limit, player_query, team_query, player, match_res)
-else:
-	generate_video(match, match3, path, samp, save_dir, match.team_size_limit, match3.team_size_limit, player_query, team_query, player, match_res)
+# if(match_ == 0):
+# 	generate_video(match, match1, path, samp, save_dir, match.team_size_limit, match1.team_size_limit, player_query, team_query, player, match_res)
+# elif(match_ == 1):
+# 	generate_video(match, match2, path, samp, save_dir, match.team_size_limit, match2.team_size_limit, player_query, team_query, player, match_res)
+# else:
+# 	generate_video(match, match3, path, samp, save_dir, match.team_size_limit, match3.team_size_limit, player_query, team_query, player, match_res)
 
 #match = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'degree', thr = 40, sampling = 30, overwrite = False)
 # match1 = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = False, mode = 'team')
@@ -68,31 +68,35 @@ else:
 # match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40)
 # match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40)
 
-# k_allowed = 10
+# fpath0 = "data/dados_futebol/CapBotT1Suav.2d"
+# fpath1 = "data/dados_futebol/CapBotT1Suav.2d"
+# fpath2 = "data/dados_futebol/CapBotT2Suav.2d"
+# fpath3 = "data/dados_futebol/CapSpoT1Suav.2d"
+# fpath4 = "data/dados_futebol/CapSpoT2Suav.2d"
+# save_dir = "log/"
 
-#distance, path, player = player_proximity(match, 6, k_allowed, 'euclidean')
+# match0 = Match(fpath1, edge_strategy_name='knn', graph_representation_name = 'degree', k = 40, sampling = 10)
+# match1 = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = True, mode = 'position')
+# match2 = Match(fpath2, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = True, mode = 'position')
+# match3 = Match(fpath1, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = True, mode = 'team')
+# match4 = Match(fpath2, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40, sampling = 10, overwrite = True, mode = 'team')
 
-#generate_video(match, match, path, save_dir, match.team_size_limit, match.team_size_limit, 6, 0, player, 0)
+#plot a position
+# plot_position(match0[100], save_dir)
 
-# distance, path = fastdtw_position_proximity(match2, match1)
-# path = np.array(path)
-# print(path.shape)
-# print(path[:10])
-
-
-#import matplotlib.pyplot as plt
-#plt.title('similarity over time')
-#plt.plot(path[:30, 0], path[:30, 1])
-#plt.savefig("tmp.png")
+# Player similarity
+# k_allowed = 5
+# player_query = 6
+# distance, path, best_player = player_proximity(match0, player_query, k_allowed, 'euclidean')
+# generate_video(match0, match0, path, save_dir, match0.team_size_limit, match0.team_size_limit, player_query, 0, best_player, 0)
 
 # Position proximity
-# top, dis =  normal_position_proximity(match1, match2, 100, 5)
-# print(match1.size())
-# print(match2.size())
-
-# for i, d in zip(top, dis):
+# query = 100
+# top_size = 5
+# top, dis =  normal_position_proximity(match1, match2, query, top_size)
+# for ind, (i, d) in enumerate(zip(top, dis)):
 #   print(i, "-->", d)
-#   plot_comparison(match1[50], match2[i], save_dir)
+#   plot_comparison(ind, match1[query], match2[i], save_dir, match1.team_size_limit, match2.team_size_limit)
 
 # Team proximity
 # s = match1.get_signature()
@@ -102,3 +106,11 @@ else:
 # print(global_distance)
 # print(best_team)
 # generate_video(match1, match2, path_res, save_dir, match1.team_size_limit, match2.team_size_limit)
+# s = match3.get_signature()
+# team = 0
+# s_a = s[:, team, :]
+# k_allowed = 3
+# global_distance, path, best_team = fastdtw_team_proximity(s_a, [match4], k_allowed)
+# print(global_distance)
+# print(best_team)
+# generate_video(match1, match2, path, save_dir, match3.team_size_limit, match4.team_size_limit)
