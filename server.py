@@ -1,7 +1,7 @@
 import os, glob, errno
 
 import sys
-sys.path.insert(0, '../')
+#sys.path.insert(0, '../')
 
 from functools import wraps
 from flask import Flask, render_template, request, redirect, Response,jsonify
@@ -96,8 +96,8 @@ def team(str_,val,mat1,mat2,team,ratio,dis):
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 @support_jsonp
 def tamanho_g(j1,j2):
-	f1 = open('../data/Dados Futebol/'+j1+".2d",'r')
-	f2 = open('../data/Dados Futebol/'+j2+".2d",'r')
+	f1 = open('data/Dados Futebol/'+j1+".2d",'r')
+	f2 = open('data/Dados Futebol/'+j2+".2d",'r')
 	num_lines1 = sum(1 for line in f1)
 	num_lines2 = sum(1 for line in f2)
 
@@ -114,19 +114,21 @@ def tamanho_g(j1,j2):
 @support_jsonp
 def visualize(pos,str_,val,mat1,mat2,team):
     if(team == 0):
-        fpath = '../data/Dados Futebol/'+mat1+".2d"
+        fpath = 'data/Dados Futebol/'+mat1+".2d"
     else:
-        fpath = '../data/Dados Futebol/'+mat2+".2d"
+        fpath = 'data/Dados Futebol/'+mat2+".2d"
 
     print(fpath)
     fpath = "/home/leodecio/workspace/football-retrieval/data/Dados Futebol/CapBotT1Suav.2d"
-    match = Match(fpath, edge_strategy_name=str_, graph_representation_name = 'embedding', thr = val)
-    plot_position(match[pos],'out_data/')
+    #match = Match(fpath, edge_strategy_name=str_, graph_representation_name = 'embedding', thr = val, mode = 'position')
+    match = Match(fpath, edge_strategy_name=str_, graph_representation_name = 'embedding', thr = int(val), sampling = 10, overwrite = False, mode = 'position')
+    
+    plot_position(match[int(pos)],'out_data/')
 
     name = {}
     #i=0
     #for value in cars:
-    name['path'] = "../webserver/out_data/"+str(pos)+".png"
+    name['path'] = "../out_data/"+str(pos).zfill(10)+".png"
     #    i = i+1
     #return name
     return json.dumps(name)
@@ -150,7 +152,7 @@ def getImageUrl(diretorio_usuario, diretorio, dicionario):
 def games():
     current = os.getcwd()
 
-    diretorio_usuario = "../data/"
+    diretorio_usuario = "data/"
     diretorio = "Dados Futebol/"
     dicionario = {}
 
