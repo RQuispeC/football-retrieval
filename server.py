@@ -116,7 +116,7 @@ def team(str_,val,mat1,mat2,team,ratio,dis, sam):
     url_ = generate_video(match1, match2, path_res, int(sam), "output/", match1.team_size_limit, match2.team_size_limit)
     name = {}
     print(url_)
-    name['sucesso'] = url_
+    name['sucesso'] = '../' + url_
     name['best'] = best_team[1]   
     return json.dumps(name)
 
@@ -175,11 +175,11 @@ def visualize0(str_,val,mat1,mat2,rep,sample,apr):
     # fpath2 = "/home/vinicius/Documentos/Dados Futebol/CapBotT1Suav.2d"
     #match = Match(fpath, edge_strategy_name=str_, graph_representation_name = 'embedding', thr = val, mode = 'position')
     if(apr == 'team'):
-        match1 = Match(fpath1, edge_strategy_name=str_, graph_representation_name = rep, k=val, thr = val, sampling = sample, overwrite = False, mode = 'team')
-        match2 = Match(fpath2, edge_strategy_name=str_, graph_representation_name = rep, k=val, thr = val, sampling = sample, overwrite = False, mode = 'team')
+        match1 = Match(fpath1, edge_strategy_name=str_, graph_representation_name = rep, k=val, thr = val, sampling = sample, overwrite = True, mode = 'team')
+        match2 = Match(fpath2, edge_strategy_name=str_, graph_representation_name = rep, k=val, thr = val, sampling = sample, overwrite = True, mode = 'team')
     else:
-        match1 = Match(fpath1, edge_strategy_name=str_, graph_representation_name = rep, k=val, thr = val, sampling = sample, overwrite = False, mode = 'position')
-        match2 = Match(fpath2, edge_strategy_name=str_, graph_representation_name = rep, k=val, thr = val, sampling = sample, overwrite = False, mode = 'position')
+        match1 = Match(fpath1, edge_strategy_name=str_, graph_representation_name = rep, k=val, thr = val, sampling = sample, overwrite = True, mode = 'position')
+        match2 = Match(fpath2, edge_strategy_name=str_, graph_representation_name = rep, k=val, thr = val, sampling = sample, overwrite = True, mode = 'position')
     
     name = {}
     name['sucesso'] = "sucesso"

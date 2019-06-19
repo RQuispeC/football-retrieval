@@ -122,8 +122,12 @@ def plot_comparison(i, t1, t2, position_a, position_b, save_dir, team1_size_limi
     l, = plt.plot(x_pos, y_pos, 'o', color=team_a_color)
 
     if query_team == 0:
-        x_query = x_pos[player_query]
-        y_query = y_pos[player_query]
+        if player_query >= 11:
+            x_query = x_pos[player_query-11]
+            y_query = y_pos[player_query-11]
+        else:
+            x_query = x_pos[player_query]
+            y_query = y_pos[player_query]
         l, = plt.plot(x_query, y_query, 'o', color=player_color)
 
     x_pos = rescale(position_a.team_b.X(), 100)
@@ -131,8 +135,12 @@ def plot_comparison(i, t1, t2, position_a, position_b, save_dir, team1_size_limi
     g, = plt.plot(x_pos, y_pos, 'o', color=team_b_color)
 
     if query_team == 1:
-        x_query = x_pos[player_query-11]
-        y_query = y_pos[player_query-11]
+        if player_query >= 11:
+            x_query = x_pos[player_query-11]
+            y_query = y_pos[player_query-11]
+        else:
+            x_query = x_pos[player_query]
+            y_query = y_pos[player_query]
         g, = plt.plot(x_query, y_query, 'o', color=player_color)
 
     #plot edges
@@ -171,8 +179,12 @@ def plot_comparison(i, t1, t2, position_a, position_b, save_dir, team1_size_limi
     l, = plt.plot(x_pos, y_pos, 'o', color=team_a_color)
 
     if res_team == 0:
-        x_res = x_pos[player_res]
-        y_res = y_pos[player_res]
+        if player_res >= 11:
+            x_res = x_pos[player_res-11]
+            y_res = y_pos[player_res-11]
+        else:
+            x_res = x_pos[player_res]
+            y_res = y_pos[player_res]
         l, = plt.plot(x_res, y_res, 'o', color=player_color)
 
     x_pos = rescale(position_b.team_b.X(), 100)
@@ -180,8 +192,12 @@ def plot_comparison(i, t1, t2, position_a, position_b, save_dir, team1_size_limi
     g, = plt.plot(x_pos, y_pos, 'o', color=team_b_color)
 
     if res_team == 1:
-        x_res = x_pos[player_res - team2_size_limit]
-        y_res = y_pos[player_res - team2_size_limit]
+        if player_res >= 11:
+            x_res = x_pos[player_res-11]
+            y_res = y_pos[player_res-11]
+        else:
+            x_res = x_pos[player_res]
+            y_res = y_pos[player_res]
         g, = plt.plot(x_res, y_res, 'o', color=player_color)
 
 
