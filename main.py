@@ -23,7 +23,7 @@ match2 = Match(fpath2, edge_strategy_name='threshold', graph_representation_name
 # match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'embedding', thr = 40)
 # match = Match(fpath, edge_strategy_name='threshold', graph_representation_name = 'gEfficiency', thr = 40)
 
-k_allowed = 10
+# k_allowed = 10
 
 #distance, path, player = player_proximity(match, 6, k_allowed, 'euclidean')
 
