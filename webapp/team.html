@@ -98,21 +98,19 @@
   </div>
   <script type="text/javascript">
 
-    function load() {
-        var combo = document.getElementById("matches");
-        var i = 0;
+    function load_match() {
+        var str = sessionStorage.getItem("str");
+        var val = sessionStorage.getItem("val");
+
+        var mat1 = sessionStorage.getItem("mat1");
+        var mat2 = sessionStorage.getItem("mat2");
         $.ajax({
-          url:"http://localhost:5000/games",
+          url:"http://localhost:5000/visualize0/"+str+"/"+val+"/"+mat1+"/"+mat2,
           type: 'POST',
           dataType: 'application/javascript',
           success:function(result){
-              var json = JSON.parse(result)
-              for (var key in json) {
-                var opt = document.createElement("option");
-                opt.value = key;
-                opt.text = json[key];
-                combo.add(opt, combo.options[i]);
-              }
+              var json = JSON.parse(result);
+              console.log(json);
             },
           error: function(e) {
           console.log("ERROR: "+ e);
@@ -120,7 +118,7 @@
       });
     } 
 
-    $("#getHtml").click(load());
+    $("#getHtml").click(load_match());
 
     function session() {
 

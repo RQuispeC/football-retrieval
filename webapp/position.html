@@ -73,6 +73,10 @@
               <option value="0">1</option>
               <option value="1">2</option>
             </select>
+            
+            <label for="pwd">Top K:</label>
+            <input type="text" class="form-control" id="topk" value=5>
+            
             <p>
             <div id="container">
               <button id="visualize" class="btn-custom">Visualize</button>
@@ -151,20 +155,47 @@
 
     $("#getHtml").click(load_n());
 
+
+
+
+    function load_match() {
+        var str = sessionStorage.getItem("str");
+        var val = sessionStorage.getItem("val");
+
+        var mat1 = sessionStorage.getItem("mat1");
+        var mat2 = sessionStorage.getItem("mat2");
+        $.ajax({
+          url:"http://localhost:5000/visualize0/"+str+"/"+val+"/"+mat1+"/"+mat2,
+          type: 'POST',
+          dataType: 'application/javascript',
+          success:function(result){
+              var json = JSON.parse(result);
+              console.log(json);
+            },
+          error: function(e) {
+          console.log("ERROR: "+ e);
+        }
+      });
+    } 
+
+    $("#getHtml").click(load_match());
+
+
+
+
     function session() {
 
-      var m = document.getElementById("matches");
-      var mat = m.options[m.selectedIndex].value;
+      var f = document.getElementById("frames");
+      var frame = f.options[f.selectedIndex].value;
+      sessionStorage.setItem("frame", frame);
 
-      var t = document.getElementById("team");
-      var tea = t.options[t.selectedIndex].value;
+      //var t = document.getElementById("team");
+      //var tea = t.options[t.selectedIndex].value;
+      //sessionStorage.setItem("tea", tea);
 
-      var p = document.getElementById("player");
-      var pla = p.options[p.selectedIndex].value;
-      
-      sessionStorage.setItem("mat", mat);
-      sessionStorage.setItem("tea", tea);
-      sessionStorage.setItem("pla", pla);
+      var tk = document.getElementById("topk");
+      var topk = tk.value;
+      sessionStorage.setItem("topk", topk);
 
       window.location.href = "video.html";
 
@@ -176,21 +207,15 @@
 
 
     function show() {
-    	var f = document.getElementById("frames");
+    	  var f = document.getElementById("frames");
       	var pos = f.options[f.selectedIndex].value;
-
-      	var str = sessionStorage.getItem("str");
-      	var val = sessionStorage.getItem("val");
-
-      	var mat1 = sessionStorage.getItem("mat1");
-      	var mat2 = sessionStorage.getItem("mat2");
 
       	var t = document.getElementById("team");
       	var tea = t.options[t.selectedIndex].value;
 
 
         $.ajax({
-          url:"http://localhost:5000/visualize/"+pos+"/"+str+"/"+val+"/"+mat1+"/"+mat2+"/"+tea,
+          url:"http://localhost:5000/visualize/"+pos+"/"+tea,
           type: 'POST',
           dataType: 'application/javascript',
           success:function(result){

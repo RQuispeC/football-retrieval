@@ -90,12 +90,14 @@
       var ratio = sessionStorage.getItem("ratio");
       var distance = sessionStorage.getItem("distance");
 
+      var vid = document.getElementById("url");
       $.ajax({
           url:"http://localhost:5000/player/"+str+"/"+val+"/"+mat1+"/"+mat2+"/"+representation+"/"+player+"/"+team+"/"+ratio+"/"+distance,
           type: 'POST',
           dataType: 'application/javascript',
           success:function(result){
-              console.log(result);
+              var json = JSON.parse(result)
+              vid.src = json['sucesso'];
             },
           error: function(e) {
           console.log("ERROR: "+ e);
@@ -114,12 +116,14 @@
       var ratio = sessionStorage.getItem("ratio");
       var distance = sessionStorage.getItem("distance");
 
+      var vid = document.getElementById("url");
       $.ajax({
           url:"http://localhost:5000/team/"+str+"/"+val+"/"+mat1+"/"+mat2+"/"+team+"/"+ratio+"/"+distance,
           type: 'POST',
           dataType: 'application/javascript',
           success:function(result){
-              console.log(result);
+              var json = JSON.parse(result)
+              vid.src = json['sucesso'];
             },
           error: function(e) {
           console.log("ERROR: "+ e);
@@ -127,6 +131,22 @@
       });
     }
     else{
+      var frame = sessionStorage.getItem("frame");
+      var topk = sessionStorage.getItem("topk");
+
+      var vid = document.getElementById("url");
+      $.ajax({
+          url:"http://localhost:5000/position/"+frame+"/"+topk,
+          type: 'POST',
+          dataType: 'application/javascript',
+          success:function(result){
+              var json = JSON.parse(result)
+              vid.src = json['sucesso'];
+            },
+          error: function(e) {
+          console.log("ERROR: "+ e);
+        }
+      });
       
     }
   
