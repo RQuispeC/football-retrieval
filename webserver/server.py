@@ -1,12 +1,20 @@
 import os, glob, errno
 
 import sys
+sys.path.insert(0, '../')
+
 from functools import wraps
 from flask import Flask, render_template, request, redirect, Response,jsonify
 import random, json
 from flask_cors import CORS, cross_origin
 
 import requests
+
+from football_lib.match import Match
+from football_lib.interface.draw import plot_position, plot_comparison, generate_video
+
+
+import matplotlib.pyplot as plt
 
 
 
@@ -101,23 +109,24 @@ def tamanho_g(j1,j2):
 
 
 @app.route('/visualize', methods = ['POST'])
-@app.route('/visualize/<str_>/<val>/<mat1>/<mat2>/<team>/<ratio>/<dis>', methods = ['POST'])
+@app.route('/visualize/<pos>/<str_>/<val>/<mat1>/<mat2>/<team>', methods = ['POST'])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 @support_jsonp
-def visualize(str_,val,mat1,mat2,team,ratio,dis):
-    
-    fpath = '../data/Dados Futebol/'+j1+".2d"
+def visualize(pos,str_,val,mat1,mat2,team):
+    if(team == 0):
+        fpath = '../data/Dados Futebol/'+mat1+".2d"
+    else:
+        fpath = '../data/Dados Futebol/'+mat2+".2d"
 
+    print(fpath)
+    fpath = "/home/leodecio/workspace/football-retrieval/ttt.2d"
+    match = Match(fpath, edge_strategy_name=str_, graph_representation_name = 'embedding', thr = val)
+    plot_position(match[pos],'out_data/')
 
-    match = Match(fpath, edge_strategy_name=str_, graph_representation_name = 'embedding', thr = 40)
-    print(str_)
-    print(val)
-    print(mat1)
-    print(team,ratio,dis)
     name = {}
     #i=0
     #for value in cars:
-    name['sucesso'] = "sucesso"
+    name['path'] = "../webserver/out_data/"+str(pos)+".png"
     #    i = i+1
     #return name
     return json.dumps(name)

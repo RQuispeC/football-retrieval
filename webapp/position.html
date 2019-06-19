@@ -109,7 +109,7 @@
     
   </div>
   <script type="text/javascript">
-    //document.getElementById("img").src = "/home/leodecio/Imagens/GOPR5710.JPG";
+    
 
     function max(v1,v2){
       if(v1>=v2){
@@ -132,8 +132,8 @@
           dataType: 'application/javascript',
           success:function(result){
               var json = JSON.parse(result);
-              var q1 = json['qtd1']/sample;
-              var q2 = json['qtd2']/sample;
+              var q1 = Math.floor(json['qtd1']/sample);
+              var q2 = Math.floor(json['qtd2']/sample);
               document.getElementById("qtd1").innerHTML = q1;
               document.getElementById("qtd2").innerHTML = q2;
               for (var i = 0; i < max(q1,q2); i++) {
@@ -176,18 +176,27 @@
 
 
     function show() {
+    	var f = document.getElementById("frames");
+      	var pos = f.options[f.selectedIndex].value;
+
+      	var str = sessionStorage.getItem("str");
+      	var val = sessionStorage.getItem("val");
+
+      	var mat1 = sessionStorage.getItem("mat1");
+      	var mat2 = sessionStorage.getItem("mat2");
+
+      	var t = document.getElementById("team");
+      	var tea = t.options[t.selectedIndex].value;
+
+
         $.ajax({
-          url:"http://localhost:5000/games",
+          url:"http://localhost:5000/visualize/"+pos+"/"+str+"/"+val+"/"+mat1+"/"+mat2+"/"+tea,
           type: 'POST',
           dataType: 'application/javascript',
           success:function(result){
-              var json = JSON.parse(result)
-              for (var key in json) {
-                var opt = document.createElement("option");
-                opt.value = key;
-                opt.text = json[key];
-                combo.add(opt, combo.options[i]);
-              }
+              var json = JSON.parse(result);
+              var caminho = json['path'];
+              document.getElementById("img").src = caminho;
             },
           error: function(e) {
           console.log("ERROR: "+ e);
