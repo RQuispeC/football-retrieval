@@ -13,6 +13,9 @@ import requests
 from football_lib.match import Match
 from football_lib.interface.draw import plot_position, plot_comparison, generate_video
 
+from football_lib.graph_similarity.player_distance import player_proximity
+from football_lib.graph_similarity.team_distance import fastdtw_team_proximity
+from football_lib.graph_similarity.position_distance import normal_position_proximity
 
 import matplotlib.pyplot as plt
 
@@ -60,28 +63,61 @@ def worker(value,value2):
     return json.dumps(name)
 
 @app.route('/player', methods = ['POST'])
-@app.route('/player/<str_>/<val>/<mat1>/<mat2>/<rep>/<player>/<team>/<ratio>/<dis>', methods = ['POST'])
+@app.route('/player/<str_>/<val>/<mat1>/<mat2>/<player>/<team>/<ratio>/<dis>/<sam>', methods = ['POST'])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 @support_jsonp
-def player(str_,val,mat1,mat2,rep,player,team,ratio,dis):
+def player(str_,val,mat1,mat2,player,team,ratio,dis,sam):
     global match1
     global match2
     
+    player = int(player)
+    team = int(team)
+    ratio = int(ratio)
+    sam = int(sam)
+
+    matches = [match2]
+    player = player + (team * 11)
+
+    distance, path, player_res, match_ = player_proximity(match1, matches, player, ratio, dis)
+    print(distance, player, match_)
     
+    match_res = 0
+    if player_res >= matches[match_].team_size_limit:
+        match_res = 1
+
+    url_ = generate_video(match1, match2, path, sam, 'output/', match1.team_size_limit, match2.team_size_limit, player, team, player_res, match_res)
+
     name = {}
-    name['sucesso'] = "URL"
+    name['sucesso'] = '../' + url_
     return json.dumps(name)
 
 @app.route('/team', methods = ['POST'])
-@app.route('/team/<str_>/<val>/<mat1>/<mat2>/<team>/<ratio>/<dis>', methods = ['POST'])
+@app.route('/team/<str_>/<val>/<mat1>/<mat2>/<team>/<ratio>/<dis>/<sam>', methods = ['POST'])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 @support_jsonp
-def team(str_,val,mat1,mat2,team,ratio,dis):
+def team(str_,val,mat1,mat2,team,ratio,dis, sam):
     global match1
     global match2
+    team = int(team)
+    if team // 2 == 0:
+        s = match1.get_signature()
+    else:
+        s = match2.get_signature()
+    team_features = s[:, team%2, :]
 
+
+    if team // 2 == 0:
+        global_distance, path_res, best_team = fastdtw_team_proximity(team_features, [match2], int(ratio), dis)
+    else:
+        global_distance, path_res, best_team = fastdtw_team_proximity(team_features, [match1], int(ratio), dis)
+
+    print(global_distance)
+    print(best_team)
+    url_ = generate_video(match1, match2, path_res, int(sam), "output/", match1.team_size_limit, match2.team_size_limit)
     name = {}
-    name['sucesso'] = "URL"
+    print(url_)
+    name['sucesso'] = '../' + url_
+    name['best'] = best_team[1]   
     return json.dumps(name)
 
 @app.route('/position', methods = ['POST'])
@@ -91,9 +127,16 @@ def team(str_,val,mat1,mat2,team,ratio,dis):
 def position(frame,topk):
     global match1
     global match2
-    
+    top, dis =  normal_position_proximity(match1, match2, int(frame), int(topk))
+    paths = []
+    for ind, (i, d) in enumerate(zip(top, dis)):
+        print(i, "-->", d)
+        path = plot_comparison(ind, int(frame), i, match1[int(frame)], match2[i], 'output/', match1.team_size_limit, match2.team_size_limit)
+        path = '../' + path
+        paths.append(path)
     name = {}
-    name['sucesso'] = "URL"
+    name['sucesso'] = paths
+    print(paths)
     return json.dumps(name)
 
 
@@ -115,21 +158,28 @@ def tamanho_g(j1,j2):
 
 
 @app.route('/visualize0', methods = ['POST'])
-@app.route('/visualize0/<str_>/<val>/<mat1>/<mat2>', methods = ['POST'])
+@app.route('/visualize0/<str_>/<val>/<mat1>/<mat2>/<rep>/<sample>/<apr>', methods = ['POST'])
 @cross_origin(origin='*',headers=['Content-Type','Authorization'])
 @support_jsonp
-def visualize0(str_,val,mat1,mat2):
+def visualize0(str_,val,mat1,mat2,rep,sample,apr):
     global match1
     global match2
-    
-    fpath2 = 'data/Dados Futebol/'+mat1+".2d"
-    fpath2 = 'data/Dados Futebol/'+mat2+".2d"
 
-    fpath1 = "/home/vinicius/Documentos/Dados Futebol/CapBotT1Suav.2d"
-    fpath2 = "/home/vinicius/Documentos/Dados Futebol/CapBotT1Suav.2d"
+    val = int(val)
+    sample = int(sample)
+    
+    fpath1 = '/home/vinicius/Documentos/Dados Futebol/'+mat1+".2d"
+    fpath2 = '/home/vinicius/Documentos/Dados Futebol/'+mat2+".2d"
+
+    # fpath1 = "/home/vinicius/Documentos/Dados Futebol/CapBotT1Suav.2d"
+    # fpath2 = "/home/vinicius/Documentos/Dados Futebol/CapBotT1Suav.2d"
     #match = Match(fpath, edge_strategy_name=str_, graph_representation_name = 'embedding', thr = val, mode = 'position')
-    match1 = Match(fpath1, edge_strategy_name=str_, graph_representation_name = 'embedding', thr = int(val), sampling = 10, overwrite = False, mode = 'position')
-    match2 = Match(fpath2, edge_strategy_name=str_, graph_representation_name = 'embedding', thr = int(val), sampling = 10, overwrite = False, mode = 'position')
+    if(apr == 'team'):
+        match1 = Match(fpath1, edge_strategy_name=str_, graph_representation_name = rep, k=val, thr = val, sampling = sample, overwrite = True, mode = 'team')
+        match2 = Match(fpath2, edge_strategy_name=str_, graph_representation_name = rep, k=val, thr = val, sampling = sample, overwrite = True, mode = 'team')
+    else:
+        match1 = Match(fpath1, edge_strategy_name=str_, graph_representation_name = rep, k=val, thr = val, sampling = sample, overwrite = True, mode = 'position')
+        match2 = Match(fpath2, edge_strategy_name=str_, graph_representation_name = rep, k=val, thr = val, sampling = sample, overwrite = True, mode = 'position')
     
     name = {}
     name['sucesso'] = "sucesso"

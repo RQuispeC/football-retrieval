@@ -91,15 +91,17 @@ def plot_position(position, save_dir):
     plt.ylim(-2, 72)
     plt.xlim(-2, 102)
     plt.axis('off')
-    plt.savefig(osp.join(save_dir, "{}.png".format(str(position.id).zfill(10))))
+    save_path = osp.join(save_dir, "{}.png".format(str(position.id).zfill(10)))
+    plt.savefig(save_path)
 
     # Clean RAM
     fig.clf()
     plt.close()
     gc.collect()
+    return save_path
 
 
-def plot_comparison(i, position_a, position_b, save_dir, team1_size_limit, team2_size_limit, player_query = -1, query_team = -1, player_res = -1, res_team = -1, save_plot = True):
+def plot_comparison(i, t1, t2, position_a, position_b, save_dir, team1_size_limit, team2_size_limit, player_query = -1, query_team = -1, player_res = -1, res_team = -1, save_plot = True):
     team_a_color = 'red'
     team_b_color = 'green'
     player_color = 'blue'
@@ -108,6 +110,8 @@ def plot_comparison(i, position_a, position_b, save_dir, team1_size_limit, team2
     fig =plt.figure() #set up the figures
     fig.set_size_inches(14, 5)
     ss1 = fig.add_subplot(1,2,1)
+    title_ = 'Time (seconds): ' + str(t1)
+    plt.title(title_,loc='left')
 
     #plot background
     ax1 = draw_pitch(ss1) #overlay our different objects on the pitch
@@ -118,8 +122,12 @@ def plot_comparison(i, position_a, position_b, save_dir, team1_size_limit, team2
     l, = plt.plot(x_pos, y_pos, 'o', color=team_a_color)
 
     if query_team == 0:
-        x_query = x_pos[player_query]
-        y_query = y_pos[player_query]
+        if player_query >= 11:
+            x_query = x_pos[player_query-11]
+            y_query = y_pos[player_query-11]
+        else:
+            x_query = x_pos[player_query]
+            y_query = y_pos[player_query]
         l, = plt.plot(x_query, y_query, 'o', color=player_color)
 
     x_pos = rescale(position_a.team_b.X(), 100)
@@ -127,8 +135,12 @@ def plot_comparison(i, position_a, position_b, save_dir, team1_size_limit, team2
     g, = plt.plot(x_pos, y_pos, 'o', color=team_b_color)
 
     if query_team == 1:
-        x_query = x_pos[player_query]
-        y_query = y_pos[player_query]
+        if player_query >= 11:
+            x_query = x_pos[player_query-11]
+            y_query = y_pos[player_query-11]
+        else:
+            x_query = x_pos[player_query]
+            y_query = y_pos[player_query]
         g, = plt.plot(x_query, y_query, 'o', color=player_color)
 
     #plot edges
@@ -158,6 +170,8 @@ def plot_comparison(i, position_a, position_b, save_dir, team1_size_limit, team2
 
     ss2 = fig.add_subplot(1,2,2)
     ax2 = draw_pitch(ss2) #overlay our different objects on the pitch
+    title_ = 'Time (seconds): ' + str(t2)
+    plt.title(title_,loc='left')
     
     #plot players
     x_pos = rescale(position_b.team_a.X(), 100)
@@ -165,8 +179,12 @@ def plot_comparison(i, position_a, position_b, save_dir, team1_size_limit, team2
     l, = plt.plot(x_pos, y_pos, 'o', color=team_a_color)
 
     if res_team == 0:
-        x_res = x_pos[player_res]
-        y_res = y_pos[player_res]
+        if player_res >= 11:
+            x_res = x_pos[player_res-11]
+            y_res = y_pos[player_res-11]
+        else:
+            x_res = x_pos[player_res]
+            y_res = y_pos[player_res]
         l, = plt.plot(x_res, y_res, 'o', color=player_color)
 
     x_pos = rescale(position_b.team_b.X(), 100)
@@ -174,8 +192,12 @@ def plot_comparison(i, position_a, position_b, save_dir, team1_size_limit, team2
     g, = plt.plot(x_pos, y_pos, 'o', color=team_b_color)
 
     if res_team == 1:
-        x_res = x_pos[player_res]
-        y_res = y_pos[player_res]
+        if player_res >= 11:
+            x_res = x_pos[player_res-11]
+            y_res = y_pos[player_res-11]
+        else:
+            x_res = x_pos[player_res]
+            y_res = y_pos[player_res]
         g, = plt.plot(x_res, y_res, 'o', color=player_color)
 
 
@@ -196,7 +218,7 @@ def plot_comparison(i, position_a, position_b, save_dir, team1_size_limit, team2
         x_pos = rescale(np.array([player_m.x, player_n.x]), 100)
         y_pos = rescale(np.array([player_m.y, player_n.y]), 72)
         l = mlines.Line2D(x_pos, y_pos, color=team_b_color)
-        if res_team == 1 and (player_m.id == player_res + team2_size_limit or player_n.id == player_res + team2_size_limit):
+        if res_team == 1 and (player_m.id == player_res - team2_size_limit or player_n.id == player_res):
             l = mlines.Line2D(x_pos, y_pos, color=player_color)
         ax2.add_line(l)
 
@@ -204,8 +226,9 @@ def plot_comparison(i, position_a, position_b, save_dir, team1_size_limit, team2
     plt.xlim(-2, 102)
     plt.axis('off')
 
+    save_path = save_dir + "file%08d.png" % i
     if save_plot:
-        plt.savefig(save_dir + "file%08d.png" % i)
+        plt.savefig(save_path)
         # plt.savefig(osp.join(save_dir, "{}_{}.png".format(str(position_a.id).zfill(10), str(position_b.id).zfill(10))))
     #convert to image
     #canvas = FigureCanvas(fig)
@@ -218,20 +241,28 @@ def plot_comparison(i, position_a, position_b, save_dir, team1_size_limit, team2
     plt.close()
     gc.collect()
 
-    #return image
+    return save_path
 
-def generate_video(match1, match2, path, save_dir, team1_size_limit, team2_size_limit, player_query = -1, query_team = -1, player_res = -1, res_team = -1):
+def generate_video(match1, match2, path, sampling, save_dir, team1_size_limit, team2_size_limit, player_query = -1, query_team = -1, player_res = -1, res_team = -1):
     for i in range(path.shape[0]):
         p1 = path[i,0]
         p2 = path[i,1]
 
-        plot_comparison(i, match1[p1], match2[p2], save_dir, team1_size_limit, team2_size_limit, player_query, query_team, player_res, res_team)
+        t1 = round((p1 * sampling) / 30.0)
+        t2 = round((p2 * sampling) / 30.0)
+
+        plot_comparison(i, t1, t2, match1[p1], match2[p2], save_dir, team1_size_limit, team2_size_limit, player_query, query_team, player_res, res_team)
 
     os.chdir(save_dir)
+
+    name = match1.id + '_' + match2.id + '_' + str(player_query) + '_' + str(query_team) + '_' + str(player_res) + '_' + str(res_team) + '.mp4'
+
     subprocess.call([
-        'ffmpeg', '-framerate', '8', '-i', 'file%08d.png', '-r', '30', '-pix_fmt', 'yuv420p',
-        'video_name.mp4'
+        'ffmpeg', '-framerate', '2', '-i', 'file%08d.png', '-r', '30', '-pix_fmt', 'yuv420p',
+        name
     ])
 
     for file_name in glob.glob("*.png"):
         os.remove(file_name)
+
+    return save_dir+name

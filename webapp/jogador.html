@@ -57,14 +57,9 @@
             <h1 class="d-block mb-4" data-aos="fade-up">Web Design Conference 2019</h1>
             <span class="d-block mb-5 caption" data-aos="fade-up">September 6th-7th, Minnesota, United States</span>-->
 
-            <label for="pwd">Representation:</label>
-            <select id="representations" class="form-control" >
-              <option value="degree">Degree</option>
-              <option value="eccentricity">Eccentricity</option>
-              <option value="gEfficiency">Global Efficiency</option>
-            </select>
+            
           </br>
-
+          <span class="d-block mb-3 caption">Player definitions</span>
           <label for="pwd">Player:</label>
             <select id="player" class="form-control">
               <option value="0">1</option>
@@ -121,11 +116,15 @@
     function load_match() {
         var str = sessionStorage.getItem("str");
         var val = sessionStorage.getItem("val");
+        var rep = sessionStorage.getItem("representation");
+        var apr = sessionStorage.getItem("apr");
+        var sample = sessionStorage.getItem("sample");
+
 
         var mat1 = sessionStorage.getItem("mat1");
         var mat2 = sessionStorage.getItem("mat2");
         $.ajax({
-          url:"http://localhost:5000/visualize0/"+str+"/"+val+"/"+mat1+"/"+mat2,
+          url:"http://localhost:5000/visualize0/"+str+"/"+val+"/"+mat1+"/"+mat2+"/"+rep+"/"+sample+"/"+apr,
           type: 'POST',
           dataType: 'application/javascript',
           success:function(result){
@@ -141,11 +140,6 @@
     $("#getHtml").click(load_match());
 
   function session() {
-
-      var r = document.getElementById("representations");
-      var rep = r.options[r.selectedIndex].value;
-      sessionStorage.setItem("representation", rep);
-
 
       var p = document.getElementById("player");
       var pla = p.options[p.selectedIndex].value;

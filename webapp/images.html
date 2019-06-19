@@ -56,12 +56,9 @@
             <span class="d-block mb-3 caption" data-aos="fade-up">Conference 2019</span>
             <h1 class="d-block mb-4" data-aos="fade-up">Web Design Conference 2019</h1>
             <span class="d-block mb-5 caption" data-aos="fade-up">September 6th-7th, Minnesota, United States</span>-->
-            <span class="d-block mb-3 caption">  <a id="best"> </a> </span> 
-            <center>
-              <video id="url" width="700" height="450" controls="controls" autoplay="autoplay">
-                <!--<source src="data/video.mp4" type="video/mp4">-->
-              </video>
-            </center>
+          <div align="left">
+            <div id="x"></div>
+          </div>
         <!-- </div>
       </div>-->
     </div>
@@ -75,69 +72,6 @@
     
   </div>
   <script type="text/javascript">
-    var apr = sessionStorage.getItem("apr");
-    
-    if(apr == 'player'){
-      var str = sessionStorage.getItem("str");
-      var val = sessionStorage.getItem("val");
-
-      var mat1 = sessionStorage.getItem("mat1");
-      var mat2 = sessionStorage.getItem("mat2");
-      
-      var representation = sessionStorage.getItem("representation");
-
-      var player = sessionStorage.getItem("player");
-      var team = sessionStorage.getItem("team");
-      var ratio = sessionStorage.getItem("ratio");
-      var distance = sessionStorage.getItem("distance");
-
-      var sample = sessionStorage.getItem("sample");
-
-      var vid = document.getElementById("url");
-      $.ajax({
-          url:"http://localhost:5000/player/"+str+"/"+val+"/"+mat1+"/"+mat2+"/"+player+"/"+team+"/"+ratio+"/"+distance+"/"+sample,
-          type: 'POST',
-          dataType: 'application/javascript',
-          success:function(result){
-              var json = JSON.parse(result)
-              vid.src = json['sucesso'];
-            },
-          error: function(e) {
-          console.log("ERROR: "+ e);
-        }
-      });
-    }
-    else if(apr == 'team'){
-      var str = sessionStorage.getItem("str");
-      var val = sessionStorage.getItem("val");
-
-      var mat1 = sessionStorage.getItem("mat1");
-      var mat2 = sessionStorage.getItem("mat2");
-      
-      
-      var team = sessionStorage.getItem("team");
-      var ratio = sessionStorage.getItem("ratio");
-      var distance = sessionStorage.getItem("distance");
-      var sample = sessionStorage.getItem("sample");
-
-      var vid = document.getElementById("url");
-      $.ajax({
-          url:"http://localhost:5000/team/"+str+"/"+val+"/"+mat1+"/"+mat2+"/"+team+"/"+ratio+"/"+distance+"/"+sample,
-          type: 'POST',
-          dataType: 'application/javascript',
-          success:function(result){
-              var json = JSON.parse(result)
-              vid.src = json['sucesso'];
-
-              var s = json['best'];
-              document.getElementById("best").innerHTML = "The most similar team is: " + s;
-            },
-          error: function(e) {
-          console.log("ERROR: "+ e);
-        }
-      });
-    }
-    /*else{
       var frame = sessionStorage.getItem("frame");
       var topk = sessionStorage.getItem("topk");
 
@@ -148,16 +82,24 @@
           dataType: 'application/javascript',
           success:function(result){
               var json = JSON.parse(result)
-              vid.src = json['sucesso'];
-
               
+              console.log(json);
+              var vet = json['sucesso'];
+              console.log(vet);
+              console.log(vet[0]);
+              for (var a in vet){
+                var img = document.createElement("img");
+ 
+                  img.src = vet[a];
+                  var src = document.getElementById("x");
+                   
+                  src.appendChild(img);
+                }
             },
           error: function(e) {
           console.log("ERROR: "+ e);
         }
       });
-      
-    }*/
   
     /*function load() {
         

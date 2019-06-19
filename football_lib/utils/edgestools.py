@@ -3,6 +3,8 @@ from __future__ import absolute_import
 import numpy as np
 import math
 
+INF = 1e15
+
 def distance(player_a, player_b):
   return math.sqrt((player_a.x - player_b.x)**2 + (player_a.y - player_b.y)**2)
 
@@ -21,7 +23,7 @@ def convert_to_matrix(team, n):
 	team[:,0] = team[:,0] - temp
 	team[:,1] = team[:,1] - temp
 
-	_matrix = np.full((n,n), np.inf)
+	_matrix = np.full((n,n), INF)
 
 	edges_team_u = np.array(team[:,0]).astype(int)
 	edges_team_v = np.array(team[:,1]).astype(int)

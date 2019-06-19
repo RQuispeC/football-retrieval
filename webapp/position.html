@@ -57,6 +57,8 @@
             <h1 class="d-block mb-4" data-aos="fade-up">Web Design Conference 2019</h1>
             <span class="d-block mb-5 caption" data-aos="fade-up">September 6th-7th, Minnesota, United States</span>-->
 
+            <span class="d-block mb-3 caption">By positions definitions</span>
+
             <label> Jogo 1: 0 a <a id="qtd1"></a> </label> # 
             <label> Jogo 2: 0 a <a id="qtd2"></a></br> </label> </br> 
 
@@ -161,11 +163,14 @@
     function load_match() {
         var str = sessionStorage.getItem("str");
         var val = sessionStorage.getItem("val");
+        var rep = sessionStorage.getItem("representation");
+        var apr = sessionStorage.getItem("apr");
+        var sample = sessionStorage.getItem("sample");
 
         var mat1 = sessionStorage.getItem("mat1");
         var mat2 = sessionStorage.getItem("mat2");
         $.ajax({
-          url:"http://localhost:5000/visualize0/"+str+"/"+val+"/"+mat1+"/"+mat2,
+          url:"http://localhost:5000/visualize0/"+str+"/"+val+"/"+mat1+"/"+mat2+"/"+rep+"/"+sample+"/"+apr,
           type: 'POST',
           dataType: 'application/javascript',
           success:function(result){
@@ -197,7 +202,7 @@
       var topk = tk.value;
       sessionStorage.setItem("topk", topk);
 
-      window.location.href = "video.html";
+      window.location.href = "images.html";
 
     } 
   

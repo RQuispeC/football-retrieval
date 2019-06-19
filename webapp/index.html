@@ -56,7 +56,7 @@
             <!--<span class="d-block mb-3 caption" data-aos="fade-up">Conference 2019</span>
             <h1 class="d-block mb-4" data-aos="fade-up">Web Design Conference 2019</h1>
             <span class="d-block mb-5 caption" data-aos="fade-up">September 6th-7th, Minnesota, United States</span>-->
-
+            <span class="d-block mb-3 caption">Graph Strategies</span>
             <label for="pwd">Strategies:</label>
             <select id="strategies" class="form-control">
               <option value="knn">Knn</option>
@@ -66,8 +66,18 @@
             <label for="pwd">Value:</label>
             <input type="text" class="form-control" id="kvalue" value=40>
 
+            <label for="pwd">Representation:</label>
+            <select id="representations" class="form-control" >
+              <option value="degree">Degree</option>
+              <option value="eccentricity">Eccentricity</option>
+              <option value="gEfficiency">Global Efficiency</option>
+              <option value="embedding">Embedding</option>
+            </select>
+
         	</br>
+
         	</br>
+            <span class="d-block mb-3 caption">Approach type</span>
 
             <label for="pwd">Approach:</label>
             <select id="approach" class="form-control" >
@@ -78,6 +88,8 @@
           </br>
           </br>
           </br>
+
+          <span class="d-block mb-3 caption">Matching informations</span>
 
           <label for="pwd">Match 1:</label>
             <select id="matches_1" class="form-control" >
@@ -155,16 +167,17 @@
 
     function session() {
 
-
-
-
       var s = document.getElementById("strategies");
       var str = s.options[s.selectedIndex].value;
       sessionStorage.setItem("str", str);
 
-      var v = document.getElementById("kvalue");
-      var val = v.value;
-      sessionStorage.setItem("val", val);
+      var kv = document.getElementById("kvalue");
+      var kval = kv.value;
+      sessionStorage.setItem("val", kval);
+
+      var r = document.getElementById("representations");
+      var rep = r.options[r.selectedIndex].value;
+      sessionStorage.setItem("representation", rep);
 
       var a = document.getElementById("approach");
       var apr = a.options[a.selectedIndex].value;
@@ -177,9 +190,9 @@
       sessionStorage.setItem("mat1", mat1);
       sessionStorage.setItem("mat2", mat2);
 
-      var v = document.getElementById("sample");
-      var val = v.value;
-      sessionStorage.setItem("sample", val);
+      var samp = document.getElementById("sample");
+      var sample = samp.value;
+      sessionStorage.setItem("sample", sample);
 
       if(apr == 'player'){
       	window.location.href = "jogador.html";

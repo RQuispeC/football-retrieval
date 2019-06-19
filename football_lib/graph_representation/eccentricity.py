@@ -8,6 +8,8 @@ import numpy as np
 
 __all__ =  ['Eccentricity']
 
+INF = 1e15
+
 class Eccentricity(object):
 	def __init__(self, match, *args, **kwargs):
 		pass
@@ -21,6 +23,14 @@ class Eccentricity(object):
 
 		dist_team_a = self._floyd_warshall(matrix_team_a)
 		dist_team_b = self._floyd_warshall(matrix_team_b)
+
+		for i in range(dist_team_a.shape[1]):
+			if dist_team_a[0,i] >= INF:
+				dist_team_a[:,i] -= INF
+
+		for i in range(dist_team_b.shape[1]):
+			if dist_team_b[0,i] >= INF:
+				dist_team_b[:,i] -= INF
 
 		eccent_team_a = self._eccent(dist_team_a)
 		eccent_team_b = self._eccent(dist_team_b)
