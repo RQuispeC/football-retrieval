@@ -58,13 +58,50 @@
             <span class="d-block mb-5 caption" data-aos="fade-up">September 6th-7th, Minnesota, United States</span>-->
 
             
+          </br>
+          <span class="d-block mb-3 caption">Player definitions</span>
+          <label for="pwd">Player:</label>
+            <select id="player" class="form-control">
+              <option value="0">1</option>
+              <option value="1">2</option>
+              <option value="2">3</option>
+              <option value="3">4</option>
+              <option value="4">5</option>
+              <option value="5">6</option>
+              <option value="6">7</option>
+              <option value="7">8</option>
+              <option value="8">9</option>
+              <option value="9">10</option>
+              <option value="10">11</option>
+            </select> 
+          </br>
+          
+          <label for="pwd">Team:</label>
+            <select id="team" class="form-control">
+              <option value="0">1</option>
+              <option value="1">2</option>
+            </select> 
+          </br>
+
+          <label for="pwd">Ratio:</label>
+            <input type="text" class="form-control" id="ratio" value=10>
+          </br>
+
+          <label for="pwd">Distances:</label>
+            <select id="distances" class="form-control">
+              <option value="euclidean">Euclidean</option>
+              <option value="cosine">Cosine</option>
+              <option value="manhattan">Manhattan</option>
+            </select> 
+          </br>
+
+          
+          </br>
+            <button id="go" class="btn-custom">Go</button>
+          </div>
         </div>
       </div>
     </div>
-
-    
-
-
       
     <footer class="site-footer">
       <div class="container">
@@ -74,24 +111,58 @@
     
   </div>
   <script type="text/javascript">
+
+
+    function load_match() {
+        var str = sessionStorage.getItem("str");
+        var val = sessionStorage.getItem("val");
+        var rep = sessionStorage.getItem("representation");
+        var apr = sessionStorage.getItem("apr");
+        var sample = sessionStorage.getItem("sample");
+
+
+        var mat1 = sessionStorage.getItem("mat1");
+        var mat2 = sessionStorage.getItem("mat2");
+        $.ajax({
+          url:"http://localhost:5000/visualize0/"+str+"/"+val+"/"+mat1+"/"+mat2+"/"+rep+"/"+sample+"/"+apr,
+          type: 'POST',
+          dataType: 'application/javascript',
+          success:function(result){
+              var json = JSON.parse(result);
+              //console.log(json);
+            },
+          error: function(e) {
+          console.log("ERROR: "+ e);
+        }
+      });
+    } 
+
+    $("#getHtml").click(load_match());
+
+  function session() {
+
+      var p = document.getElementById("player");
+      var pla = p.options[p.selectedIndex].value;
+      sessionStorage.setItem("player", pla);
+
+      var t = document.getElementById("team");
+      var tea = t.options[t.selectedIndex].value;
+      sessionStorage.setItem("team", tea);
+
+      var ra = document.getElementById("ratio");
+      var ratio = ra.value;
+      sessionStorage.setItem("ratio", ratio);
+
+      var d = document.getElementById("distances");
+      var dis = d.options[d.selectedIndex].value;
+      sessionStorage.setItem("distance", dis);
+
+      window.location.href = "video.html";
+    } 
   
-    $("#reset").click(function(){
-      $.ajax({
-        url:"http://localhost:5000/receiver/55/77",
-        type: 'POST',
-        dataType: 'application/javascript',
-        success:function(result){
-            console.log("success"); //does not print
-            console.log(result)
-            var json = JSON.parse(result).values
-            console.log(json[0])
-            //console.log(result);   //does not print
-        },
-        error: function(e) {
-        console.log("ERROR: "+ e);
-      }
+    $("#go").click(function(){
+      session();  
     });
-  });
   
   </script>
 

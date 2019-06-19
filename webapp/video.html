@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Football</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+    <link rel="stylesheet" href="css/aos.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+  </head>
+  <body>
+  
+  <div class="site-wrap">
+
+    <div class="site-mobile-menu">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close mt-3">
+          <span class="icon-close2 js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div>
+    
+    <header class="site-navbar py-3" role="banner">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col-11 col-xl-2">
+            <h1 class="mb-0"><a href="index.html" class="text-white h2 mb-0">Foot<span class="text-primary">Ball</span> </a></h1>
+          </div>
+          <div class="col-12 col-md-10 d-none d-xl-block">
+            <nav class="site-navigation position-relative text-right" role="navigation">
+            </nav>
+          </div>
+          <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="site-section site-hero">
+      <div class="container">
+        <!-- <div class="row align-items-center">
+          <div class="col-md-10">
+            <span class="d-block mb-3 caption" data-aos="fade-up">Conference 2019</span>
+            <h1 class="d-block mb-4" data-aos="fade-up">Web Design Conference 2019</h1>
+            <span class="d-block mb-5 caption" data-aos="fade-up">September 6th-7th, Minnesota, United States</span>-->
+            <span class="d-block mb-3 caption">  <a id="best"> </a> </span> 
+            <center>
+              <video id="url" width="700" height="450" controls="controls" autoplay="autoplay">
+                <!--<source src="data/video.mp4" type="video/mp4">-->
+              </video>
+            </center>
+        <!-- </div>
+      </div>-->
+    </div>
+
+      
+    <footer class="site-footer">
+      <div class="container">
+
+      </div>
+    </footer>
+    
+  </div>
+  <script type="text/javascript">
+    var apr = sessionStorage.getItem("apr");
+    
+    if(apr == 'player'){
+      var str = sessionStorage.getItem("str");
+      var val = sessionStorage.getItem("val");
+
+      var mat1 = sessionStorage.getItem("mat1");
+      var mat2 = sessionStorage.getItem("mat2");
+      
+      var representation = sessionStorage.getItem("representation");
+
+      var player = sessionStorage.getItem("player");
+      var team = sessionStorage.getItem("team");
+      var ratio = sessionStorage.getItem("ratio");
+      var distance = sessionStorage.getItem("distance");
+
+      var sample = sessionStorage.getItem("sample");
+
+      var vid = document.getElementById("url");
+      $.ajax({
+          url:"http://localhost:5000/player/"+str+"/"+val+"/"+mat1+"/"+mat2+"/"+player+"/"+team+"/"+ratio+"/"+distance+"/"+sample,
+          type: 'POST',
+          dataType: 'application/javascript',
+          success:function(result){
+              var json = JSON.parse(result)
+              vid.src = json['sucesso'];
+            },
+          error: function(e) {
+          console.log("ERROR: "+ e);
+        }
+      });
+    }
+    else if(apr == 'team'){
+      var str = sessionStorage.getItem("str");
+      var val = sessionStorage.getItem("val");
+
+      var mat1 = sessionStorage.getItem("mat1");
+      var mat2 = sessionStorage.getItem("mat2");
+      
+      
+      var team = sessionStorage.getItem("team");
+      var ratio = sessionStorage.getItem("ratio");
+      var distance = sessionStorage.getItem("distance");
+      var sample = sessionStorage.getItem("sample");
+
+      var vid = document.getElementById("url");
+      $.ajax({
+          url:"http://localhost:5000/team/"+str+"/"+val+"/"+mat1+"/"+mat2+"/"+team+"/"+ratio+"/"+distance+"/"+sample,
+          type: 'POST',
+          dataType: 'application/javascript',
+          success:function(result){
+              var json = JSON.parse(result)
+              vid.src = json['sucesso'];
+
+              var s = json['best'];
+              document.getElementById("best").innerHTML = "The most similar team is: " + s;
+            },
+          error: function(e) {
+          console.log("ERROR: "+ e);
+        }
+      });
+    }
+    /*else{
+      var frame = sessionStorage.getItem("frame");
+      var topk = sessionStorage.getItem("topk");
+
+      var vid = document.getElementById("url");
+      $.ajax({
+          url:"http://localhost:5000/position/"+frame+"/"+topk,
+          type: 'POST',
+          dataType: 'application/javascript',
+          success:function(result){
+              var json = JSON.parse(result)
+              vid.src = json['sucesso'];
+
+              
+            },
+          error: function(e) {
+          console.log("ERROR: "+ e);
+        }
+      });
+      
+    }*/
+  
+    /*function load() {
+        
+        var vid = document.getElementById("url");
+        var i = 0;
+        $.ajax({
+          url:"http://localhost:5000/video",
+          type: 'POST',
+          dataType: 'application/javascript',
+          success:function(result){
+              var json = JSON.parse(result)
+              for (var key in json) {
+                vid.src = json[key];
+                //sor.type="video/mp4";
+                //console.log(json[key]);
+                //vid.add(sor, vid.source);
+              }
+            },
+          error: function(e) {
+          console.log("ERROR: "+ e);
+        }
+      });
+    } 
+
+    $("#getHtml").click(load());*/
+
+    /*var s1 = sessionStorage.getItem("distance");
+    var s2 = sessionStorage.getItem("ratio");
+    var s3 = sessionStorage.getItem("mat1");
+    var s4 = sessionStorage.getItem("mat2");
+    
+    console.log(s1);
+    console.log(s2);
+    console.log(s3);
+    console.log(s4);*/
+  
+  </script>
+
+  <!--<script src="js/jquery-3.3.1.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/jquery-ui.js"></script>
+  <script src="js/jquery.countdown.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  
+  <script src="js/aos.js"></script>
+
+  <script src="js/main.js"></script>
+  <script src="js/popper.min.js"></script>-->
+    
+  </body>
+</html>

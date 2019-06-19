@@ -91,12 +91,14 @@ def plot_position(position, save_dir):
     plt.ylim(-2, 72)
     plt.xlim(-2, 102)
     plt.axis('off')
-    plt.savefig(osp.join(save_dir, "{}.png".format(str(position.id).zfill(10))))
+    save_path = osp.join(save_dir, "{}.png".format(str(position.id).zfill(10)))
+    plt.savefig(save_path)
 
     # Clean RAM
     fig.clf()
     plt.close()
     gc.collect()
+    return save_path
 
 
 def plot_comparison(i, t1, t2, position_a, position_b, save_dir, team1_size_limit, team2_size_limit, player_query = -1, query_team = -1, player_res = -1, res_team = -1, save_plot = True):
@@ -129,8 +131,8 @@ def plot_comparison(i, t1, t2, position_a, position_b, save_dir, team1_size_limi
     g, = plt.plot(x_pos, y_pos, 'o', color=team_b_color)
 
     if query_team == 1:
-        x_query = x_pos[player_query]
-        y_query = y_pos[player_query]
+        x_query = x_pos[player_query-11]
+        y_query = y_pos[player_query-11]
         g, = plt.plot(x_query, y_query, 'o', color=player_color)
 
     #plot edges
@@ -208,8 +210,9 @@ def plot_comparison(i, t1, t2, position_a, position_b, save_dir, team1_size_limi
     plt.xlim(-2, 102)
     plt.axis('off')
 
+    save_path = save_dir + "file%08d.png" % i
     if save_plot:
-        plt.savefig(save_dir + "file%08d.png" % i)
+        plt.savefig(save_path)
         # plt.savefig(osp.join(save_dir, "{}_{}.png".format(str(position_a.id).zfill(10), str(position_b.id).zfill(10))))
     #convert to image
     #canvas = FigureCanvas(fig)
@@ -222,7 +225,7 @@ def plot_comparison(i, t1, t2, position_a, position_b, save_dir, team1_size_limi
     plt.close()
     gc.collect()
 
-    #return image
+    return save_path
 
 def generate_video(match1, match2, path, sampling, save_dir, team1_size_limit, team2_size_limit, player_query = -1, query_team = -1, player_res = -1, res_team = -1):
     for i in range(path.shape[0]):
@@ -245,3 +248,5 @@ def generate_video(match1, match2, path, sampling, save_dir, team1_size_limit, t
 
     for file_name in glob.glob("*.png"):
         os.remove(file_name)
+
+    return save_dir+name

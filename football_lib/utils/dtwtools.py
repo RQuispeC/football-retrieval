@@ -1,19 +1,6 @@
 from __future__ import absolute_import
-from __future__ import division
 
 import numpy as np
-
-from fastdtw import fastdtw
-from football_lib.utils.general_utils import get_signatures
-from football_lib.utils.dtwtools import path_processing
-
-from scipy.spatial import distance
-
-distance_dic = {
-	'euclidean': distance.euclidean,
-	'cosine': distance.cosine,
-	'manhattan': distance.cityblock
-}
 
 def rle(inarray):
         ia = np.asarray(inarray)
@@ -68,30 +55,3 @@ def path_processing(path, k_allowed):
 	output = np.stack((path1,path2), axis=-1)
 
 	return output
-
-
-def player_proximity(match1, matches, player_query, k_allowed, distance_function = 'euclidean'):
-	player_signature = get_signatures(match1,player_query)
-	function = distance_dic[distance_function]
-	
-	global_distance = np.inf
-	player_res = player_query
-	path_res = []
-	match_ = -1
-
-	for m in range(len(matches)):
-		match2 = matches[m]
-		for i in range(22):
-			i_signature = get_signatures(match2,i)
-			distance, path = fastdtw(player_signature, i_signature, dist=function)
-			print('{} - {}: {}'.format(player_query,i,distance))
-			if distance < global_distance:
-				global_distance = distance
-				player_res = i
-				path_res = path
-				match_ = m
-
-	path_res = np.array(path_res)
-	path_res = path_processing(path_res, k_allowed)
-
-	return global_distance, path_res, player_res, match_

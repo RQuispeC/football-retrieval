@@ -56,64 +56,41 @@
             <!--<span class="d-block mb-3 caption" data-aos="fade-up">Conference 2019</span>
             <h1 class="d-block mb-4" data-aos="fade-up">Web Design Conference 2019</h1>
             <span class="d-block mb-5 caption" data-aos="fade-up">September 6th-7th, Minnesota, United States</span>-->
-            <span class="d-block mb-3 caption">Graph Strategies</span>
-            <label for="pwd">Strategies:</label>
-            <select id="strategies" class="form-control">
-              <option value="knn">Knn</option>
-              <option value="threshold">Threshold</option>
+
+            <label for="pwd">Match:</label>
+            <select id="matches" class="form-control" >
+              <!--<option value="dg">Degree</option>
+              <option value="ec">Eccentricity</option>
+              <option value="ge">Global Efficiency</option>
+              <option value="sp">Space</option>-->
+            </select>
+          </br>
+          
+            <label for="pwd">Team:</label>
+            <select id="team" class="form-control">
+              <option value="1">1</option>
+              <option value="2">2</option>
             </select> 
-
-            <label for="pwd">Value:</label>
-            <input type="text" class="form-control" id="kvalue" value=40>
-
-            <label for="pwd">Representation:</label>
-            <select id="representations" class="form-control" >
-              <option value="degree">Degree</option>
-              <option value="eccentricity">Eccentricity</option>
-              <option value="gEfficiency">Global Efficiency</option>
-              <option value="embedding">Embedding</option>
-            </select>
-
-        	</br>
-
-        	</br>
-            <span class="d-block mb-3 caption">Approach type</span>
-
-            <label for="pwd">Approach:</label>
-            <select id="approach" class="form-control" >
-              <option value="player">Player</option>
-              <option value="team">Team</option>
-              <option value="position">Position</option>
-            </select>
           </br>
-          </br>
-          </br>
-
-          <span class="d-block mb-3 caption">Matching informations</span>
-
-          <label for="pwd">Match 1:</label>
-            <select id="matches_1" class="form-control" >
-              <!--<option value="dg">Degree</option>
-              <option value="ec">Eccentricity</option>
-              <option value="ge">Global Efficiency</option>
-              <option value="sp">Space</option>-->
-            </select>
-        	
-        	<label for="pwd">Match 2:</label>
-            <select id="matches_2" class="form-control" >
-              <!--<option value="dg">Degree</option>
-              <option value="ec">Eccentricity</option>
-              <option value="ge">Global Efficiency</option>
-              <option value="sp">Space</option>-->
-            </select>
-            <label for="pwd">Value:</label>
-            <label>1-60</label>
-            <input type="text" class="form-control" id="sample" value=30>
-            </br>
             
-            <!--<a href="#" class="btn-custom"><span>Proceed</span></a>-->
-             <button id="getHtml" class="btn-custom">Proceed</button>
-
+            <label for="pwd">Player:</label>
+            <select id="player" class="form-control">
+              <option value="0">1</option>
+              <option value="1">2</option>
+              <option value="2">3</option>
+              <option value="3">4</option>
+              <option value="4">5</option>
+              <option value="5">6</option>
+              <option value="6">7</option>
+              <option value="7">8</option>
+              <option value="8">9</option>
+              <option value="9">10</option>
+              <option value="10">11</option>
+            </select> 
+          </br>
+          
+          </br>
+            <button id="go" class="btn-custom">getttt</button>
           </div>
         </div>
       </div>
@@ -132,10 +109,8 @@
   </div>
   <script type="text/javascript">
 
-
-  	    function load_matches() {
-        var combo1 = document.getElementById("matches_1");
-        var combo2 = document.getElementById("matches_2");
+    function load() {
+        var combo = document.getElementById("matches");
         var i = 0;
         $.ajax({
           url:"http://localhost:5000/games",
@@ -145,16 +120,9 @@
               var json = JSON.parse(result)
               for (var key in json) {
                 var opt = document.createElement("option");
-                var opt2 = document.createElement("option");
-                //opt.value = key;
                 opt.value = key;
                 opt.text = json[key];
-                
-                opt2.value = key;
-                opt2.text = json[key];
-
-                combo1.add(opt, combo1.options[i]);
-                combo2.add(opt2, combo2.options[i]);
+                combo.add(opt, combo.options[i]);
               }
             },
           error: function(e) {
@@ -163,52 +131,29 @@
       });
     } 
 
-    $("#getHtml").click(load_matches());
+    $("#getHtml").click(load());
 
     function session() {
 
-      var s = document.getElementById("strategies");
-      var str = s.options[s.selectedIndex].value;
-      sessionStorage.setItem("str", str);
+      var m = document.getElementById("matches");
+      var mat = m.options[m.selectedIndex].value;
 
-      var kv = document.getElementById("kvalue");
-      var kval = kv.value;
-      sessionStorage.setItem("val", kval);
+      var t = document.getElementById("team");
+      var tea = t.options[t.selectedIndex].value;
 
-      var r = document.getElementById("representations");
-      var rep = r.options[r.selectedIndex].value;
-      sessionStorage.setItem("representation", rep);
-
-      var a = document.getElementById("approach");
-      var apr = a.options[a.selectedIndex].value;
-      sessionStorage.setItem("apr", apr);
-
-      var m1 = document.getElementById("matches_1");
-      var mat1 = m1.options[m1.selectedIndex].value;
-      var m2 = document.getElementById("matches_2");
-      var mat2 = m2.options[m2.selectedIndex].value;
-      sessionStorage.setItem("mat1", mat1);
-      sessionStorage.setItem("mat2", mat2);
-
-      var samp = document.getElementById("sample");
-      var sample = samp.value;
-      sessionStorage.setItem("sample", sample);
-
-      if(apr == 'player'){
-      	window.location.href = "jogador.html";
-
-      }
-      else if(apr == 'team'){
-      	window.location.href = "team.html";
-      }
-      else{
-      	window.location.href = "position.html";
-      }
+      var p = document.getElementById("player");
+      var pla = p.options[p.selectedIndex].value;
       
-	} 
+      sessionStorage.setItem("mat", mat);
+      sessionStorage.setItem("tea", tea);
+      sessionStorage.setItem("pla", pla);
 
-    $("#getHtml").click(function() {
-        session();
+      window.location.href = "video.html";
+
+    } 
+  
+    $("#go").click(function(){
+      session();  
     });
   
   </script>

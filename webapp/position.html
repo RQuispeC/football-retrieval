@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Football</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+    <link rel="stylesheet" href="css/aos.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+  </head>
+  <body>
+  
+  <div class="site-wrap">
+
+    <div class="site-mobile-menu">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close mt-3">
+          <span class="icon-close2 js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div>
+    
+    <header class="site-navbar py-3" role="banner">
+      <div class="container-fluid">
+        <div class="row align-items-center">
+          <div class="col-11 col-xl-2">
+            <h1 class="mb-0"><a href="index.html" class="text-white h2 mb-0">Foot<span class="text-primary">Ball</span> </a></h1>
+          </div>
+          <div class="col-12 col-md-10 d-none d-xl-block">
+            <nav class="site-navigation position-relative text-right" role="navigation">
+            </nav>
+          </div>
+          <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="site-section site-hero">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-10">
+            <!--<span class="d-block mb-3 caption" data-aos="fade-up">Conference 2019</span>
+            <h1 class="d-block mb-4" data-aos="fade-up">Web Design Conference 2019</h1>
+            <span class="d-block mb-5 caption" data-aos="fade-up">September 6th-7th, Minnesota, United States</span>-->
+
+            <span class="d-block mb-3 caption">By positions definitions</span>
+
+            <label> Jogo 1: 0 a <a id="qtd1"></a> </label> # 
+            <label> Jogo 2: 0 a <a id="qtd2"></a></br> </label> </br> 
+
+            <label for="pwd">Frames:</label>
+            <select id="frames" class="form-control" >
+              <!--<option value="dg">Degree</option>
+              <option value="ec">Eccentricity</option>
+              <option value="ge">Global Efficiency</option>
+              <option value="sp">Space</option>-->
+            </select>
+            
+            <label for="pwd">Team:</label>
+            <select id="team" class="form-control">
+              <option value="0">1</option>
+              <option value="1">2</option>
+            </select>
+            
+            <label for="pwd">Top K:</label>
+            <input type="text" class="form-control" id="topk" value=5>
+            
+            <p>
+            <div id="container">
+              <button id="visualize" class="btn-custom">Visualize</button>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <button id="go" class="btn-custom">Go</button> 
+            </div>
+          </p>
+          
+          <div align="left">
+            <figure>
+                <img id="img" src="images/pitch.png" width="700" height="450">
+            </figure>
+          </div>
+          
+          </br>
+           
+          </div>
+        </div>
+      </div>
+    </div>
+      
+    <footer class="site-footer">
+      <div class="container">
+
+      </div>
+    </footer>
+    
+  </div>
+  <script type="text/javascript">
+    
+
+    function max(v1,v2){
+      if(v1>=v2){
+        return v1;
+      }
+      else{
+        return v2;
+      }
+    }
+    function load_n(){
+      var combo = document.getElementById("frames");
+      
+      var mat1 = sessionStorage.getItem("mat1");
+      var mat2 = sessionStorage.getItem("mat2");
+      var sample = sessionStorage.getItem("sample");
+        
+        $.ajax({
+          url:"http://localhost:5000/tamanho_g/"+mat1+"/"+mat2,
+          type: 'POST',
+          dataType: 'application/javascript',
+          success:function(result){
+              var json = JSON.parse(result);
+              var q1 = Math.floor(json['qtd1']/sample);
+              var q2 = Math.floor(json['qtd2']/sample);
+              document.getElementById("qtd1").innerHTML = q1;
+              document.getElementById("qtd2").innerHTML = q2;
+              for (var i = 0; i < max(q1,q2); i++) {
+                var opt = document.createElement("option");
+                opt.value = i;
+                opt.text = i;
+                combo.add(opt, combo.options[i]);
+              }
+            },
+          error: function(e) {
+          console.log("ERROR: "+ e);
+        }
+      });
+    } 
+
+    $("#getHtml").click(load_n());
+
+
+
+
+    function load_match() {
+        var str = sessionStorage.getItem("str");
+        var val = sessionStorage.getItem("val");
+        var rep = sessionStorage.getItem("representation");
+        var apr = sessionStorage.getItem("apr");
+        var sample = sessionStorage.getItem("sample");
+
+        var mat1 = sessionStorage.getItem("mat1");
+        var mat2 = sessionStorage.getItem("mat2");
+        $.ajax({
+          url:"http://localhost:5000/visualize0/"+str+"/"+val+"/"+mat1+"/"+mat2+"/"+rep+"/"+sample+"/"+apr,
+          type: 'POST',
+          dataType: 'application/javascript',
+          success:function(result){
+              var json = JSON.parse(result);
+              console.log(json);
+            },
+          error: function(e) {
+          console.log("ERROR: "+ e);
+        }
+      });
+    } 
+
+    $("#getHtml").click(load_match());
+
+
+
+
+    function session() {
+
+      var f = document.getElementById("frames");
+      var frame = f.options[f.selectedIndex].value;
+      sessionStorage.setItem("frame", frame);
+
+      //var t = document.getElementById("team");
+      //var tea = t.options[t.selectedIndex].value;
+      //sessionStorage.setItem("tea", tea);
+
+      var tk = document.getElementById("topk");
+      var topk = tk.value;
+      sessionStorage.setItem("topk", topk);
+
+      window.location.href = "images.html";
+
+    } 
+  
+    $("#go").click(function(){
+      session();  
+    });
+
+
+    function show() {
+    	  var f = document.getElementById("frames");
+      	var pos = f.options[f.selectedIndex].value;
+
+      	var t = document.getElementById("team");
+      	var tea = t.options[t.selectedIndex].value;
+
+
+        $.ajax({
+          url:"http://localhost:5000/visualize/"+pos+"/"+tea,
+          type: 'POST',
+          dataType: 'application/javascript',
+          success:function(result){
+              var json = JSON.parse(result);
+              var caminho = json['path'];
+              document.getElementById("img").src = caminho;
+            },
+          error: function(e) {
+          console.log("ERROR: "+ e);
+        }
+      });
+    } 
+
+    $("#visualize").click(function(){
+      show();  
+    });
+  
+  </script>
+
+  <!--<script src="js/jquery-3.3.1.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/jquery-ui.js"></script>
+  <script src="js/jquery.countdown.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  
+  <script src="js/aos.js"></script>
+
+  <script src="js/main.js"></script>
+  <script src="js/popper.min.js"></script>-->
+    
+  </body>
+</html>

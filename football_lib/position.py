@@ -31,6 +31,7 @@ class Position(object):
     elif mode == "team":
       graph = self.edges_team_a
     for i, e in enumerate(graph):
+      if len(e) < 3: continue
       if i > 0:
         edges += ','
         features += ','
@@ -43,8 +44,12 @@ class Position(object):
       edges = ""
       features = ""
       graph = self.edges_team_b
-      min_edge_id = np.min(self.edges_team_b[:, :2])
+      if len(self.edges_team_b):
+        min_edge_id = np.min(self.edges_team_b[:, :2])
+      else:
+        min_edge_id = 0
       for i, e in enumerate(graph):
+        if len(e) < 3: continue
         if i > 0:
           edges += ','
           features += ','
