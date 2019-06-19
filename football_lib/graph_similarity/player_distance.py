@@ -69,24 +69,40 @@ def path_processing(path, k_allowed):
 	return output
 
 
-def player_proximity(match, player, k_allowed, distance_function = 'euclidean'):
-	player_signature = get_signatures(match,player)
+def player_proximity(match1, matches, player_query, k_allowed, distance_function = 'euclidean'):
+	player_signature = get_signatures(match1,player_query)
 	function = distance_dic[distance_function]
 	
 	global_distance = np.inf
-	player_res = player
+	player_res = player_query
 	path_res = []
+	match_ = -1
 
-	for i in range(22):
-		if i != player:
-			i_signature = get_signatures(match,i)
+	# for i in range(22):
+	# 	if i != player_query:
+	# 		i_signature = get_signatures(match1,i)
+	# 		# print('assinatura: ',i_signature)
+	# 		distance, path = fastdtw(player_signature, i_signature, dist=function)
+	# 		print('{} - {}: {}'.format(player_query,i,distance))
+	# 		if distance < global_distance:
+	# 			global_distance = distance
+	# 			player_res = i
+	# 			path_res = path
+	# 			match_ = -1
+
+	for m in range(len(matches)):
+		match2 = matches[m]
+		for i in range(22):
+			i_signature = get_signatures(match2,i)
 			distance, path = fastdtw(player_signature, i_signature, dist=function)
+			print('{} - {}: {}'.format(player_query,i,distance))
 			if distance < global_distance:
 				global_distance = distance
 				player_res = i
 				path_res = path
+				match_ = m
 
 	path_res = np.array(path_res)
 	path_res = path_processing(path_res, k_allowed)
 
-	return global_distance, path_res, player_res
+	return global_distance, path_res, player_res, match_

@@ -18,10 +18,9 @@ np.seterr(divide='ignore')
 class Gefficiency(object):
     def __init__(self, match, *args, **kwargs):
         self.V = 11
-        #pass
 
     def __call__(self, position):
-        edges_ta = position.edges_team_a.copy()#[]
+        edges_ta = position.edges_team_a.copy() #[]
         edges_tb = position.edges_team_b.copy() #[]
         matrix_team_a = convert_to_matrix(edges_ta, self.V)
         matrix_team_b = convert_to_matrix(edges_tb, self.V)
@@ -44,6 +43,6 @@ class Gefficiency(object):
         np.fill_diagonal(temp, 0)
         N = temp.shape[0]
         
-        ne = ( 1.0 / (N - 1)) * np.apply_along_axis(sum, 0, temp)
+        ne = (1.0 / (N - 1)) * np.apply_along_axis(sum, 0, temp)
 
         return ne
